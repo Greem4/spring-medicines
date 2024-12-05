@@ -1,0 +1,19 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/medicines_db
+    username: post
+    password: post
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties.hibernate:
+      show_sql: true
+      format_sql: true
+      hbm2ddl.auto: validate
+
+  thymeleaf:
+    enabled: true
+    prefix: classpath:/templates/
+    suffix: .html
