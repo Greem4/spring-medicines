@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 
@@ -26,5 +27,6 @@ public class Medicine {
     private String serialNumber;
 
     @Column(name = "expiration_date")
+    @DateTimeFormat(pattern = "dd-MM-yyyy")
     private LocalDate expirationDate;
 }

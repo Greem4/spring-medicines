@@ -40,10 +40,10 @@
     </tr>
     </thead>
     <tbody>
-    <tr th:each="medicine : ${medicines}">
-        <td th:text="${medicine.name}">Название</td>
-        <td th:text="${medicine.serialNumber}">Серийный номер</td>
-        <td th:text="${medicine.expirationDate}">Срок годности</td>
+    <tr th:each="item : ${medicines}">
+        <td th:text="${item['medicine'].name}">Название</td>
+        <td th:text="${item['medicine'].serialNumber}">Серийный номер</td>
+        <td th:text="${item['formattedExpirationDate']}">Срок годности</td>
     </tr>
     </tbody>
 </table>
