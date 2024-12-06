@@ -43,7 +43,7 @@
     <tr th:each="item : ${medicines}">
         <td th:text="${item['medicine'].name}">Название</td>
         <td th:text="${item['medicine'].serialNumber}">Серийный номер</td>
-        <td th:text="${item['formattedExpirationDate']}">Срок годности</td>
+        <td th:text="${item['formattedDate']}">Срок годности</td>
     </tr>
     </tbody>
 </table>

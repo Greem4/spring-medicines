@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
@@ -25,10 +26,8 @@ public class MedicineController {
                 .map(medicine -> {
                     Map<String, Object> medicineMap = new HashMap<>();
                     medicineMap.put("medicine", medicine);
-                    if (medicine.getExpirationDate() != null) {
-                        String formattedDate = medicineService.formatDate(medicine.getExpirationDate());
-                        medicineMap.put("formattedExpirationDate", formattedDate);
-                    }
+                    Optional.ofNullable(medicine.getExpirationDate())
+                            .ifPresent(date -> medicineMap.put("formattedDate", medicineService.formatDate(date)));
                     return medicineMap;
                 })
                 .toList();
