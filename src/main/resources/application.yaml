@@ -1,17 +1,35 @@
+logging:
+  level:
+    root: info
+    com.zaxxer.hikari: info
+    org.hibernate: info
+    org.hibernate.orm.connections.pooling: OFF
+  file:
+    name: loggingFile.log
+    path: /
+
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/medicines_db
     username: post
     password: post
     driver-class-name: org.postgresql.Driver
-
+    hikari:
+      minimum-idle: 2
+      maximum-pool-size: 10
+      idle-timeout: 30000
+      pool-name: HikariPool-1
+      max-lifetime: 1800000
+      connection-timeout: 30000
   jpa:
+    properties:
+        hibernate:
+          show_sql: true
+          format_sql: true
+          hbm2ddl.auto: validate
+          database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: update
-    properties.hibernate:
-      show_sql: true
-      format_sql: true
-      hbm2ddl.auto: validate
 
   thymeleaf:
     enabled: true
