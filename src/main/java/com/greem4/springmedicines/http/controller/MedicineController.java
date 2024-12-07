@@ -67,4 +67,10 @@ public class MedicineController {
         medicineService.updateMedicine(id, medicine);
         return "redirect:/medicines/list";
     }
+
+    @GetMapping("/delete/{id}")
+    public String deleteMedicine(@PathVariable Long id) {
+        medicineService.deleteMedicine(id);
+        return "redirect:/medicines/list";
+    }
 }
