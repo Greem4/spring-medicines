@@ -28,6 +28,7 @@ public class MedicineController {
                     medicineMap.put("medicine", medicine);
                     Optional.ofNullable(medicine.getExpirationDate())
                             .ifPresent(date -> medicineMap.put("formattedDate", medicineService.formatDate(date)));
+                    medicineMap.put("getColor", medicine.getColor());
                     return medicineMap;
                 })
                 .toList();

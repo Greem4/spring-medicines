@@ -27,6 +27,18 @@
         tr:hover {
             background-color: #f1f1f1;
         }
+        .green {
+            background-color: #23db4f;
+        }
+        .orange {
+            background-color: #d7ad2a;
+        }
+        .red {
+            background-color: #e00d20;
+        }
+        .expiration-date {
+            color: #333;
+        }
     </style>
 </head>
 <body>
@@ -43,7 +55,7 @@
     <tr th:each="item : ${medicines}">
         <td th:text="${item['medicine'].name}">Название</td>
         <td th:text="${item['medicine'].serialNumber}">Серийный номер</td>
-        <td th:text="${item['formattedDate']}">Срок годности</td>
+        <td th:text="${item['formattedDate']}" th:classappend="${item['getColor']} + ' expiration-date'">Срок годности</td>
     </tr>
     </tbody>
 </table>
