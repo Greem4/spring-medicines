@@ -40,6 +40,7 @@ public class MedicineService {
     @Transactional
     public void updateMedicine(Long id, Medicine updatedMedicine) {
         var existingMedicine = medicineRepository.findById(id).orElseThrow();
+
         var update = Medicine.builder()
                 .id(id)
                 .name(updatedMedicine.getName())
@@ -50,5 +51,10 @@ public class MedicineService {
                 .build();
 
         medicineRepository.save(update);
+    }
+
+    @Transactional
+    public void deleteMedicine(Long id) {
+        medicineRepository.deleteById(id);
     }
 }
