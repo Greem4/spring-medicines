@@ -1,4 +1,6 @@
 logging:
+  pattern:
+    dateformat: dd-MM-yyyy 'T' HH:mm:ss.SSS XXX
   level:
     root: info
     com.zaxxer.hikari: info
