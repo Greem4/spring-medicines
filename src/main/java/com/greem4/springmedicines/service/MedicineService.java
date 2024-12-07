@@ -25,4 +25,9 @@ public class MedicineService {
     public List<Medicine> getAllMedicines() {
         return medicineRepository.findAll();
     }
+
+    @Transactional
+    public void addMedicine(Medicine medicine) {
+        medicineRepository.save(medicine);
+    }
 }
