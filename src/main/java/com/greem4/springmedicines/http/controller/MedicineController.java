@@ -1,4 +1,4 @@
-package com.greem4.springmedicines.controller;
+package com.greem4.springmedicines.http.controller;
 
 import com.greem4.springmedicines.database.entity.Medicine;
 import com.greem4.springmedicines.service.MedicineService;
@@ -13,12 +13,13 @@ import java.util.Map;
 import java.util.Optional;
 
 @Controller
+@RequestMapping("/medicines")
 @RequiredArgsConstructor
 public class MedicineController {
 
     private final MedicineService medicineService;
 
-    @GetMapping("/medicines")
+    @GetMapping("/list")
     public String showMedicines(Model model) {
         List<Medicine> medicines = medicineService.getAllMedicines();
 
@@ -34,6 +35,6 @@ public class MedicineController {
                 .toList();
 
         model.addAttribute("medicines", formatDate);
-        return "medicines";
+        return "medicinesList";
     }
 }
