@@ -54,4 +54,17 @@ public class MedicineController {
         medicineService.addMedicine(medicine);
         return "redirect:/medicines/list";
     }
+
+    @GetMapping("/edit/{id}")
+    public String showEditMedicineForm(@PathVariable Long id, Model model) {
+        Medicine medicine = medicineService.findById(id);
+        model.addAttribute("medicine", medicine);
+        return "editMedicineForm";
+    }
+
+    @PostMapping("/edit/{id}")
+    public String updateMedicine(@PathVariable Long id, @ModelAttribute Medicine medicine) {
+        medicineService.updateMedicine(id, medicine);
+        return "redirect:/medicines/list";
+    }
 }

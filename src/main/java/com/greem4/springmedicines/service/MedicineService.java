@@ -26,8 +26,26 @@ public class MedicineService {
         return medicineRepository.findAll();
     }
 
+    public Medicine findById(Long id) {
+        return medicineRepository.findById(id).orElse(null);
+    }
+
+
     @Transactional
     public void addMedicine(Medicine medicine) {
         medicineRepository.save(medicine);
     }
+
+    @Transactional
+    public void updateMedicine(Long id, Medicine updatedMedicine) {
+             var update = Medicine.builder()
+                .id(id)
+                .name(updatedMedicine.getName())
+                .expirationDate(updatedMedicine.getExpirationDate())
+                .serialNumber(updatedMedicine.getSerialNumber())
+                .build();
+
+        medicineRepository.save(update);
+    }
+
 }
