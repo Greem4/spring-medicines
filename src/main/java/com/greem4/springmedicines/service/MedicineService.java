@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -24,5 +25,30 @@ public class MedicineService {
 
     public List<Medicine> getAllMedicines() {
         return medicineRepository.findAll();
+    }
+
+    public Medicine findById(Long id) {
+        return medicineRepository.findById(id).orElse(null);
+    }
+
+
+    @Transactional
+    public void addMedicine(Medicine medicine) {
+        medicineRepository.save(medicine);
+    }
+
+    @Transactional
+    public void updateMedicine(Long id, Medicine updatedMedicine) {
+        var existingMedicine = medicineRepository.findById(id).orElseThrow();
+        var update = Medicine.builder()
+                .id(id)
+                .name(updatedMedicine.getName())
+                .expirationDate(Optional.ofNullable(updatedMedicine
+                        .getExpirationDate())
+                        .orElse(existingMedicine.getExpirationDate()))
+                .serialNumber(updatedMedicine.getSerialNumber())
+                .build();
+
+        medicineRepository.save(update);
     }
 }
