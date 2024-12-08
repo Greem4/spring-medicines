@@ -7,3 +7,7 @@ CREATE TABLE medicines (
                            expiration_date DATE NOT NULL
 );
 
+ALTER TABLE medicines
+    ADD COLUMN created_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    ADD COLUMN last_modified_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP;
+

@@ -1,22 +1,20 @@
 package com.greem4.springmedicines.database.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Entity
 @Table(name = "medicines")
-public class Medicine {
+public class Medicine extends Auditable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
