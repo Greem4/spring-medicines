@@ -45,6 +45,20 @@
         th {
             background-color: #f4f4f4;
             color: #555;
+            cursor: pointer;
+        }
+
+        th a {
+            text-decoration: none;
+            color: #555;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        th a:hover {
+            color: #007bff;
         }
 
         tr:hover {
@@ -69,20 +83,22 @@
 
         .edit-button, .delete-button {
             text-decoration: none;
-            background-color: #007bff;
             color: white;
             padding: 5px 10px;
             border-radius: 5px;
-            font-size: 16px;
-            transition: background-color 0.3s ease;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
         }
 
-        .edit-button:hover, .delete-button:hover {
+        .edit-button {
+            background-color: #007bff;
+        }
+
+        .edit-button:hover {
             background-color: #0056b3;
-        }
-
-        .edit-button i, .delete-button i {
-            font-size: 18px;
         }
 
         .delete-button {
@@ -91,6 +107,15 @@
 
         .delete-button:hover {
             background-color: #b20c1d;
+        }
+
+        .sort-icon {
+            font-size: 14px;
+            color: #999;
+        }
+
+        .sort-icon.active {
+            color: #007bff;
         }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -103,9 +128,24 @@
 <table>
     <thead>
     <tr>
-        <th>Название</th>
-        <th>Серийный номер</th>
-        <th>Срок годности</th>
+        <th>
+            <a th:href="@{/medicines/list(sortBy='name', sortDirection=${currentSortBy == 'name' && currentSortDirection == 'asc' ? 'desc' : 'asc'})}">
+                Название
+                <span class="sort-icon" th:text="${currentSortBy == 'name' && currentSortDirection == 'asc' ? '▲' : (currentSortBy == 'name' ? '▼' : '')}"></span>
+            </a>
+        </th>
+        <th>
+            <a th:href="@{/medicines/list(sortBy='serialNumber', sortDirection=${currentSortBy == 'serialNumber' && currentSortDirection == 'asc' ? 'desc' : 'asc'})}">
+                Серийный номер
+                <span class="sort-icon" th:text="${currentSortBy == 'serialNumber' && currentSortDirection == 'asc' ? '▲' : (currentSortBy == 'serialNumber' ? '▼' : '')}"></span>
+            </a>
+        </th>
+        <th>
+            <a th:href="@{/medicines/list(sortBy='expirationDate', sortDirection=${currentSortBy == 'expirationDate' && currentSortDirection == 'asc' ? 'desc' : 'asc'})}">
+                Срок годности
+                <span class="sort-icon" th:text="${currentSortBy == 'expirationDate' && currentSortDirection == 'asc' ? '▲' : (currentSortBy == 'expirationDate' ? '▼' : '')}"></span>
+            </a>
+        </th>
         <th>Действия</th>
     </tr>
     </thead>

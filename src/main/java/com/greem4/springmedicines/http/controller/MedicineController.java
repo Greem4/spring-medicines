@@ -22,8 +22,10 @@ public class MedicineController {
     private final MedicineService medicineService;
 
     @GetMapping("/list")
-    public String showMedicines(Model model) {
-        List<Medicine> medicines = medicineService.getAllMedicines();
+    public String showMedicines(@RequestParam(defaultValue = "name") String sortBy,
+                                @RequestParam(defaultValue = "asc") String sortDirection,
+                                Model model) {
+        List<Medicine> medicines = medicineService.getAllMedicinesSorted(sortBy, sortDirection);
 
         List<Map<String, Object>> formatDate = medicines.stream()
                 .map(medicine -> {
@@ -37,6 +39,8 @@ public class MedicineController {
                 .toList();
 
         model.addAttribute("medicines", formatDate);
+        model.addAttribute("currentSortBy", sortBy);
+        model.addAttribute("currentSortDirection", sortDirection);
         return "medicinesList";
     }
 
