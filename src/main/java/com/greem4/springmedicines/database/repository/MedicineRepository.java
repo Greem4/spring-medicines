@@ -1,4 +1,4 @@
-package com.greem4.springmedicines.database.repositort;
+package com.greem4.springmedicines.database.repository;
 
 import com.greem4.springmedicines.database.entity.Medicine;
 import org.springframework.data.jpa.repository.JpaRepository;
