@@ -28,7 +28,6 @@ spring:
         hibernate:
           show_sql: true
           format_sql: true
-          hbm2ddl.auto: validate
           database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: update

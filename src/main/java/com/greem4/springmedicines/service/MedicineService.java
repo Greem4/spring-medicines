@@ -1,16 +1,22 @@
 package com.greem4.springmedicines.service;
 
 import com.greem4.springmedicines.database.entity.Medicine;
-import com.greem4.springmedicines.database.repositort.MedicineRepository;
+import com.greem4.springmedicines.database.repository.MedicineRepository;
+import com.greem4.springmedicines.dto.MedicineCreateRequest;
+import com.greem4.springmedicines.dto.MedicineUpdateRequest;
+import com.greem4.springmedicines.dto.MedicineView;
+import com.greem4.springmedicines.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.Period;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
 import java.util.Optional;
+
 
 @Service
 @RequiredArgsConstructor
@@ -19,45 +25,67 @@ public class MedicineService {
 
     private final MedicineRepository medicineRepository;
 
-    public List<Medicine> getAllMedicinesSorted(String sortBy, String sortDirection) {
-        Sort sort = sortDirection.equalsIgnoreCase("asc")
-                ? Sort.by(sortBy).ascending()
-                : Sort.by(sortBy).descending();
-        return medicineRepository.findAll(sort);
+    public Page<MedicineView> getAllMedicines(Pageable pageable) {
+        return medicineRepository.findAll(pageable)
+                .map(this::toMedicineView);
     }
 
-    public Medicine findById(Long id) {
-        return medicineRepository.findById(id).orElse(null);
-    }
-
-    @Transactional
-    public void addMedicine(Medicine medicine) {
-        medicineRepository.save(medicine);
+    public Optional<MedicineView> findById(Long id) {
+        return medicineRepository.findById(id)
+                .map(this::toMedicineView);
     }
 
     @Transactional
-    public void updateMedicine(Long id, Medicine updatedMedicine) {
-        var existingMedicine = medicineRepository.findById(id).orElseThrow();
+    public MedicineView addMedicine(MedicineCreateRequest request) {
+        Medicine medicine = new Medicine();
+        medicine.setName(request.name());
+        medicine.setSerialNumber(request.serialNumber());
+        medicine.setExpirationDate(request.expirationDate());
+        var saved = medicineRepository.save(medicine);
+        return toMedicineView(saved);
+    }
 
-        var update = Medicine.builder()
-                .id(id)
-                .name(updatedMedicine.getName())
-                .expirationDate(Optional.ofNullable(updatedMedicine
-                        .getExpirationDate())
-                        .orElse(existingMedicine.getExpirationDate()))
-                .serialNumber(updatedMedicine.getSerialNumber())
-                .build();
+    @Transactional
+    public MedicineView updateMedicine(Long id, MedicineUpdateRequest request) {
+        var existingMedicine = medicineRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Препарат не найден"));
 
-        medicineRepository.save(update);
+        existingMedicine.setName(request.name());
+        existingMedicine.setSerialNumber(request.serialNumber());
+        existingMedicine.setExpirationDate(request.expirationDate());
+
+        return toMedicineView(existingMedicine);
     }
 
     @Transactional
     public void deleteMedicine(Long id) {
-        medicineRepository.deleteById(id);
+        var existingMedicine = medicineRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Препарат не найден"));
+        medicineRepository.delete(existingMedicine);
     }
 
-    public String formatDate(LocalDate localDate) {
+    private String formatDate(LocalDate localDate) {
         DateTimeFormatter format = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         return localDate.format(format);
+    }
+
+    private String determineColor(LocalDate expirationDate) {
+        LocalDate today = LocalDate.now();
+        Period period = Period.between(today, expirationDate);
+        int daysLeft = period.getDays() + period.getMonths() * 30 + period.getYears() * 365;
+
+        if (daysLeft > 90) return "green";
+        if (daysLeft > 30) return "orange";
+        return "red";
+    }
+
+    private MedicineView toMedicineView(Medicine medicine) {
+        return new MedicineView(
+                medicine.getId(),
+                medicine.getName(),
+                medicine.getSerialNumber(),
+                formatDate(medicine.getExpirationDate()),
+                determineColor(medicine.getExpirationDate())
+        );
     }
 }

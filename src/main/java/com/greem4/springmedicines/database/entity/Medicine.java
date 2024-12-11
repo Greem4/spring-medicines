@@ -5,10 +5,9 @@ import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 
-@EqualsAndHashCode(callSuper = true)
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -29,15 +28,4 @@ public class Medicine extends Auditable {
     @DateTimeFormat(pattern = "dd-MM-yyyy")
     private LocalDate expirationDate;
 
-    public String getColor() {
-        return getMonthsUtilExpiration() > 3 ? "green" :
-               getMonthsUtilExpiration() >= 2 ? "orange" :
-               getMonthsUtilExpiration() >= 1 ? "red" : "black";
-    }
-
-    private long getMonthsUtilExpiration() {
-        LocalDate today = LocalDate.now();
-        LocalDate firstDayOfMonth = today.minusMonths(1);
-        return ChronoUnit.MONTHS.between(firstDayOfMonth, expirationDate);
-    }
 }
