@@ -1,5 +1,6 @@
-DROP TABLE medicines;
+--liquibase formatted sql
 
+--changeset dev:1
 CREATE TABLE medicines (
                            id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
                            name VARCHAR(255) NOT NULL,
@@ -7,7 +8,7 @@ CREATE TABLE medicines (
                            expiration_date DATE NOT NULL
 );
 
+--changeset dev:2
 ALTER TABLE medicines
     ADD COLUMN created_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     ADD COLUMN last_modified_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP;
-
