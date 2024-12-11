@@ -8,6 +8,9 @@ import com.greem4.springmedicines.service.MedicineService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,9 +25,12 @@ public class MedicineRestController {
     private final MedicineService medicineService;
 
     @GetMapping
-    public ResponseEntity<Page<MedicineView>> getAllMedicines(Pageable pageable) {
-        Page<MedicineView> medicines = medicineService.getAllMedicines(pageable);
-        return ResponseEntity.ok(medicines);
+    public ResponseEntity<PagedModel<EntityModel<MedicineView>>> getAllMedicines(
+            Pageable pageable,
+            PagedResourcesAssembler<MedicineView> assembler) {
+        Page<MedicineView> page = medicineService.getAllMedicines(pageable);
+        PagedModel<EntityModel<MedicineView>> pagedModel = assembler.toModel(page);
+        return ResponseEntity.ok(pagedModel);
     }
 
     @GetMapping("/{id}")

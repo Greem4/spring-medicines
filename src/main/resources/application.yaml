@@ -8,7 +8,7 @@ logging:
     org.hibernate.orm.connections.pooling: OFF
   file:
     name: loggingFile.log
-    path: ./logs
+    path: /
 
 spring:
   datasource:
