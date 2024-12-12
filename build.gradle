@@ -54,6 +54,9 @@ dependencies {
     testImplementation 'org.testcontainers:postgresql'
     testImplementation "org.mockito:mockito-inline:${versions.mockito}"
 
+    testCompileOnly 'org.projectlombok:lombok'
+    testAnnotationProcessor 'org.projectlombok:lombok'
+
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
