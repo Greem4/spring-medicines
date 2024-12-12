@@ -5,6 +5,7 @@ import com.greem4.springmedicines.dto.MedicineUpdateRequest;
 import com.greem4.springmedicines.dto.MedicineView;
 import com.greem4.springmedicines.exception.ResourceNotFoundException;
 import com.greem4.springmedicines.service.MedicineService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,6 +21,7 @@ import jakarta.validation.Valid;
 @RequestMapping("/api/medicines")
 @RequiredArgsConstructor
 @CrossOrigin(origins = "http://localhost:3000")
+@Tag(name = "Medicine API", description = "API для управления лекарствами")
 public class MedicineRestController {
 
     private final MedicineService medicineService;
