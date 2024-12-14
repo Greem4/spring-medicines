@@ -13,7 +13,7 @@ import static org.assertj.core.api.Assertions.*;
 class MedicineServiceTest extends IntegrationTestBase {
 
     @Autowired
-    private  MedicineService medicineService;
+    private MedicineService medicineService;
 
     @Test
     void addMedicine() {
@@ -31,8 +31,8 @@ class MedicineServiceTest extends IntegrationTestBase {
         var saveView = medicineService.addMedicine(request);
         Long id = saveView.id();
 
-       assertThat(medicineService.findById(id)).isPresent();
-       medicineService.deleteMedicine(id);
-       assertThat(medicineService.findById(id)).isNotPresent();
+        assertThat(medicineService.findById(id)).isPresent();
+        medicineService.deleteMedicine(id);
+        assertThat(medicineService.findById(id)).isNotPresent();
     }
 }
