@@ -1,5 +1,6 @@
 ext {
     versions = [
-         'mockito': '5.2.0'
+         'mockito': '5.2.0',
+         'springdoc': '2.7.0'
     ]
 }
