@@ -8,7 +8,9 @@ import com.greem4.springmedicines.dto.MedicineView;
 import com.greem4.springmedicines.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +28,18 @@ public class MedicineService {
     private final MedicineRepository medicineRepository;
 
     public Page<MedicineView> getAllMedicines(Pageable pageable) {
+        if (!pageable.getSort().isSorted()) {
+            PageRequest.of(
+                    pageable.getPageNumber(),
+                    pageable.getPageSize(),
+                    Sort.by(
+                            Sort.Order.desc("expirationDate"),
+                            Sort.Order.desc("serialNumber"),
+                            Sort.Order.asc("name")
+                    )
+            );
+        }
+
         return medicineRepository.findAll(pageable)
                 .map(this::toMedicineView);
     }
