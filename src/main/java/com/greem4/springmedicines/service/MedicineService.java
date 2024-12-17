@@ -29,17 +29,16 @@ public class MedicineService {
 
     public Page<MedicineView> getAllMedicines(Pageable pageable) {
         if (!pageable.getSort().isSorted()) {
-            PageRequest.of(
+            pageable = PageRequest.of(
                     pageable.getPageNumber(),
                     pageable.getPageSize(),
                     Sort.by(
+                            Sort.Order.asc("name"),
                             Sort.Order.desc("expirationDate"),
-                            Sort.Order.desc("serialNumber"),
-                            Sort.Order.asc("name")
+                            Sort.Order.desc("serialNumber")
                     )
             );
         }
-
         return medicineRepository.findAll(pageable)
                 .map(this::toMedicineView);
     }

@@ -4,7 +4,7 @@ public record MedicineView(
         Long id,
         String name,
         String serialNumber,
-        String formattedDate,
+        String expirationDate,
         String color
 ) {
 }
