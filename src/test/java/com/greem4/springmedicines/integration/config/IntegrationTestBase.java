@@ -13,9 +13,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 @SpringBootTest
 @ExtendWith(SpringExtension.class)
-@Sql({
-        "classpath:sql/data.sql"
-})
+@Sql(scripts = "classpath:sql/data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 @Testcontainers
 @ActiveProfiles("test")
 public abstract class IntegrationTestBase {

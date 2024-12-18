@@ -22,6 +22,16 @@ class MedicineServiceTest extends IntegrationTestBase {
     private MedicineService medicineService;
 
     @Test
+    void testGetAllMedicines() {
+        var page = medicineService.getAllMedicines(PageRequest.of(0, 3));
+
+        assertThat(page.getTotalElements()).isGreaterThanOrEqualTo(2);
+        assertThat(page.getContent())
+                .extracting(MedicineView::name)
+                .containsExactlyInAnyOrder("Анальгин", "Аспирин", "Ибупрофен");
+    }
+
+    @Test
     void testAddMedicine() {
         var request = new MedicineCreateRequest(
                 "Aspirin",
@@ -38,16 +48,6 @@ class MedicineServiceTest extends IntegrationTestBase {
                 LocalDate.now().plusMonths(1).format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))
         );
         assertThat(view.color()).isEqualTo("red");
-    }
-
-    @Test
-    void testGetAllMedicines() {
-        var page = medicineService.getAllMedicines(PageRequest.of(0, 3));
-
-       assertThat(page.getTotalElements()).isGreaterThanOrEqualTo(2);
-       assertThat(page.getContent())
-               .extracting(MedicineView::name)
-               .containsExactlyInAnyOrder("Гепарин", "Кальция глюконат. р-р в/в в/м 10мл", "Мезатон");
     }
 
     @Test
