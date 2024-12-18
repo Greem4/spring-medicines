@@ -3,7 +3,6 @@ package com.greem4.springmedicines.integration.service;
 import com.greem4.springmedicines.dto.MedicineView;
 import com.greem4.springmedicines.integration.config.IntegrationTestBase;
 import com.greem4.springmedicines.service.MedicineService;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -17,7 +16,6 @@ public class MedicineSortedServiceTest extends IntegrationTestBase {
     private MedicineService medicineService;
 
     @Test
-    @DisplayName("Получение всех медикаментов")
     void testGetAllMedicines() {
         var page = medicineService.getAllMedicines(PageRequest.of(0, 10));
 
@@ -39,7 +37,6 @@ public class MedicineSortedServiceTest extends IntegrationTestBase {
     }
 
     @Test
-    @DisplayName("Сортировка по дате истечения (возрастание)")
     void testSortByExpirationDateASC() {
         var pageRequest = PageRequest.of(0, 10, Sort.by(Sort.Direction.ASC, "expirationDate"));
         var page = medicineService.getAllMedicines(pageRequest);
@@ -62,7 +59,6 @@ public class MedicineSortedServiceTest extends IntegrationTestBase {
     }
 
     @Test
-    @DisplayName("Сортировка по дате истечения (убывание)")
     void testSortByExpirationDateDESC() {
         var pageRequest = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "expirationDate"));
         var page = medicineService.getAllMedicines(pageRequest);
@@ -85,7 +81,6 @@ public class MedicineSortedServiceTest extends IntegrationTestBase {
     }
 
     @Test
-    @DisplayName("Сортировка по названию (возрастание)")
     void testSortByNameAsc() {
         var pageRequest = PageRequest.of(0, 10, Sort.by(Sort.Direction.ASC, "name"));
         var page = medicineService.getAllMedicines(pageRequest);
@@ -108,7 +103,6 @@ public class MedicineSortedServiceTest extends IntegrationTestBase {
     }
 
     @Test
-    @DisplayName("Сортировка по названию (убывание)")
     void testSortByNameDesc() {
         var pageRequest = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "name"));
         var page = medicineService.getAllMedicines(pageRequest);
@@ -132,7 +126,6 @@ public class MedicineSortedServiceTest extends IntegrationTestBase {
     }
 
     @Test
-    @DisplayName("Комбинированная сортировка: дата истечения (убывание) и название (возрастание)")
     void testSortByExpirationDateDescAndNameAsc() {
         var pageRequest = PageRequest.of(0, 10, Sort.by(
                 Sort.Order.desc("expirationDate"),

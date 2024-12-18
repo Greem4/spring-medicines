@@ -1,16 +1,16 @@
 logging:
   pattern:
-    dateformat: dd-MM-yyyy 'T' HH:mm:ss.SSS
+    dateformat: dd-MM-yyyy 'T' HH:mm:ss
   level:
     root: info
     com.greem4.springmedicines: info
     com.greem4.springmedicines.util.aspect: info
     com.zaxxer.hikari: info
     org.hibernate: info
+    org.springframework.security: debug
     org.hibernate.orm.connections.pooling: OFF
   file:
-    name: loggingFile.log
-    path: ./logs
+    name: ./logs/loggingFile.log
 
 spring:
   datasource:
@@ -36,7 +36,9 @@ spring:
     hibernate:
       ddl-auto: update
     open-in-view: false
-
+  output:
+    ansi:
+      enabled: always
   thymeleaf:
     enabled: true
     prefix: classpath:/templates/
