@@ -6,8 +6,9 @@ import org.aspectj.lang.annotation.*;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
-
+import java.time.Duration;
+import java.time.Instant;
+import java.util.stream.IntStream;
 
 @Slf4j
 @Aspect
@@ -15,29 +16,45 @@ import java.util.Arrays;
 public class LoggingAspect {
 
     @Pointcut("execution(public * com.greem4.springmedicines.http.controller..*(..)) || execution(public * com.greem4.springmedicines.service..*(..))")
-    public void applicationPackagePointcut() {}
+    public void applicationPackagePointcut() {
+    }
 
     @Around("applicationPackagePointcut()")
     public Object logAround(ProceedingJoinPoint joinPoint) throws Throwable {
         var signature = (MethodSignature) joinPoint.getSignature();
         var className = signature.getDeclaringTypeName();
         var methodName = signature.getName();
+        var parameterNames = signature.getParameterNames();
         Object[] args = joinPoint.getArgs();
 
-        log.info("Starting method call: {}.{} with arguments: {}", className, methodName, Arrays.toString(args));
+        StringBuilder argumentsInfo = new StringBuilder();
+        IntStream.range(0, args.length).forEach(i -> argumentsInfo.append(parameterNames[i])
+                .append("=")
+                .append(args[i])
+                .append(i < args.length - 1 ? ", " : ""));
 
-        long startTime = System.currentTimeMillis();
+        String threadName = Thread.currentThread().getName();
+        log.info("[THREAD: {}] Starting method call: {}.{}({})",
+                threadName, className, methodName, argumentsInfo);
+
+        Instant start = Instant.now();
+
         try {
             Object result = joinPoint.proceed();
+            Instant end = Instant.now();
+            long elapsedSeconds = Duration.between(start, end).toSeconds();
 
-            long elapsedTime = System.currentTimeMillis() - startTime;
+            log.info("[THREAD: {}] Completed method call: {}.{} in {} seconds. Result: {}",
+                    threadName, className, methodName, elapsedSeconds, result);
 
-            log.info("Completed method call: {}.{} in {} ms with result: {}", className, methodName, elapsedTime, result);
             return result;
         } catch (Throwable ex) {
-            long elapsedTime = System.currentTimeMillis() - startTime;
+            Instant end = Instant.now();
+            long elapsedSeconds = Duration.between(start, end).toSeconds();
 
-            log.error("Exception in method: {}.{} after {} ms. Exception: {}", className, methodName, elapsedTime, ex.toString());
+            log.error("[THREAD: {}] Exception in method: {}.{} after {} seconds. Exception: {}",
+                    threadName, className, methodName, elapsedSeconds, ex.toString());
+
             throw ex;
         }
     }
