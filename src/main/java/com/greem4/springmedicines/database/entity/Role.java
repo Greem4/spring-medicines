@@ -1,5 +1,5 @@
 package com.greem4.springmedicines.database.entity;
 
-public enum UserRole {
+public enum Role {
     ADMIN, USER
 }

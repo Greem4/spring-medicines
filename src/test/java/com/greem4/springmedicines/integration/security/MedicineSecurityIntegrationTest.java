@@ -20,27 +20,27 @@ public class MedicineSecurityIntegrationTest extends IntegrationTestBase {
     private TestRestTemplate testRestTemplate;
 
     @Test
-    void testGetAllWithoutAuth() {
+    void getAllWithoutAuth() {
         var response = testRestTemplate.getForEntity("/api/medicines", PagedModel.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).isNotNull();
     }
 
     @Test
-    void testGetByIdWithoutAuth() {
+    void getByIdWithoutAuth() {
         var response = testRestTemplate.getForEntity("/api/medicines/1", MedicineView.class);
         assertThat(response.getStatusCode()).isIn(HttpStatus.OK, HttpStatus.NOT_FOUND);
     }
 
     @Test
-    void testPostWithoutAuth() {
+    void postWithoutAuth() {
         var request = new MedicineCreateRequest("TestMedicine", "1222", LocalDate.now().plusMonths(1));
         var response = testRestTemplate.postForEntity("/api/medicines", request, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
     }
 
     @Test
-    void testPostWithUserAuth() {
+    void postWithUserAuth() {
         var request = new MedicineCreateRequest("TestMedicine", "1222", LocalDate.now().plusMonths(1));
         var response = testRestTemplate
                 .withBasicAuth("user", "user")
@@ -50,7 +50,7 @@ public class MedicineSecurityIntegrationTest extends IntegrationTestBase {
     }
 
     @Test
-    void testPostWithAdminAuth() {
+    void postWithAdminAuth() {
         var request = new MedicineCreateRequest("TestMedicine", "1222", LocalDate.now().plusMonths(4));
         var response = testRestTemplate
                 .withBasicAuth("admin", "admin")
@@ -61,7 +61,7 @@ public class MedicineSecurityIntegrationTest extends IntegrationTestBase {
     }
 
     @Test
-    void testPutWithUser() {
+    void putWithUser() {
         var updateData = Map.of(
                 "name", "UpdatedName",
                 "serialNumber", "12345",
@@ -80,7 +80,7 @@ public class MedicineSecurityIntegrationTest extends IntegrationTestBase {
     }
 
     @Test
-    void testPutWithAuth() {
+    void putWithAuth() {
         var updateData = Map.of(
                 "name", "UpdatedName",
                 "serialNumber", "12345",
@@ -97,7 +97,7 @@ public class MedicineSecurityIntegrationTest extends IntegrationTestBase {
     }
 
     @Test
-    void testDeleteWithAdmin() {
+    void deleteWithAdmin() {
         var response = testRestTemplate
                 .withBasicAuth("admin", "admin")
                 .exchange("/api/medicines/1", HttpMethod.DELETE, null, String.class);
@@ -106,7 +106,7 @@ public class MedicineSecurityIntegrationTest extends IntegrationTestBase {
     }
 
     @Test
-    void testDeleteWithUser() {
+    void deleteWithUser() {
         var response = testRestTemplate
                 .withBasicAuth("user", "user")
                 .exchange("/api/medicines/1", HttpMethod.DELETE, null, String.class);
@@ -115,7 +115,7 @@ public class MedicineSecurityIntegrationTest extends IntegrationTestBase {
     }
 
     @Test
-    void testDeleteWithAuth() {
+    void deleteWithAuth() {
         var response = testRestTemplate
                 .exchange("/api/medicines/1", HttpMethod.DELETE, null, String.class);
 

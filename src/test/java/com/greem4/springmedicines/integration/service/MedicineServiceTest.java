@@ -22,7 +22,7 @@ class MedicineServiceTest extends IntegrationTestBase {
     private MedicineService medicineService;
 
     @Test
-    void testGetAllMedicines() {
+    void getAllMedicines() {
         var page = medicineService.getAllMedicines(PageRequest.of(0, 3));
 
         assertThat(page.getTotalElements()).isGreaterThanOrEqualTo(2);
@@ -32,7 +32,7 @@ class MedicineServiceTest extends IntegrationTestBase {
     }
 
     @Test
-    void testAddMedicine() {
+    void addMedicine() {
         var request = new MedicineCreateRequest(
                 "Aspirin",
                 "30121",
@@ -51,7 +51,7 @@ class MedicineServiceTest extends IntegrationTestBase {
     }
 
     @Test
-    void testUpdateMedicine() {
+    void updateMedicine() {
         var request = new MedicineCreateRequest(
                 "Aspirin",
                 "12345",
@@ -77,7 +77,7 @@ class MedicineServiceTest extends IntegrationTestBase {
     }
 
     @Test
-    void testDeleteMedicines() {
+    void deleteMedicines() {
         var deleteMedicine = medicineService.findById(4L);
         assertThat(deleteMedicine).isPresent();
 
