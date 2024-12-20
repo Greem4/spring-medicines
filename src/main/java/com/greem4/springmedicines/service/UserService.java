@@ -21,6 +21,7 @@ public class UserService {
                 .username(request.username())
                 .password(passwordEncoder.encode(request.password()))
                 .role(role)
+                .enabled(true)
                 .build();
         return userRepository.save(user);
     }
