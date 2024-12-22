@@ -10,6 +10,12 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<String> handleResourceNotFound(ResourceNotFoundException ex) {
+        log.error("ResourceNotFoundException: {}", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+    }
+
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<String> handleUserNotFound(UserNotFoundException ex) {
         log.error("UserNotFoundException: {}", ex.getMessage());
@@ -34,10 +40,15 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }
 
+    @ExceptionHandler(PasswordTooShortException.class)
+    public ResponseEntity<String> handlePasswordMismatch(PasswordTooShortException ex) {
+        log.error("PasswordTooShortException: {}", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleGeneralException(Exception ex) {
         log.error("Exception: {}", ex.getMessage(), ex);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Внутренняя ошибка сервера");
     }
-
 }

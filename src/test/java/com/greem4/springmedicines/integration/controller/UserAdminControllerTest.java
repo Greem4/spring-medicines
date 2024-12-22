@@ -1,6 +1,7 @@
 package com.greem4.springmedicines.integration.controller;
 
 import com.greem4.springmedicines.database.entity.Role;
+import com.greem4.springmedicines.dto.ChangePasswordRequest;
 import com.greem4.springmedicines.dto.UserCreatedRequest;
 import com.greem4.springmedicines.dto.UserResponse;
 import com.greem4.springmedicines.dto.UserRoleUpdateRequest;
@@ -116,6 +117,25 @@ public class UserAdminControllerTest extends IntegrationTestBase {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
-//    @Test
-//    void changePassword
+    @Test
+    void changePasswordAdminAuth() {
+        var changePasswordRequest = new ChangePasswordRequest("admin2", "123456", "123456");
+
+        var response = testRestTemplate
+                .withBasicAuth("admin2", "admin2")
+                .exchange("/api/users/changePassword",
+                        HttpMethod.PUT,
+                        new HttpEntity<>(changePasswordRequest),
+                        Void.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+
+        var profileResponse = testRestTemplate
+                .withBasicAuth("admin2", "123456")
+                .getForEntity("/api/users/profile", UserResponse.class);
+
+        assertThat(profileResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(profileResponse.getBody()).isNotNull();
+        assertThat(Objects.requireNonNull(profileResponse.getBody()).username()).isEqualTo("admin2");
+    }
 }

@@ -30,12 +30,11 @@ public class SecurityConfig {
                                 "/webjars/**"
                         ).permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/medicines/**").permitAll()
-                        .requestMatchers(HttpMethod.PUT, "/api/admin/users/**/changePassword").authenticated()
+                        .requestMatchers(HttpMethod.PUT, "/api/users/changePassword").authenticated()
                         .requestMatchers(HttpMethod.POST, "/api/medicines").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/api/medicines/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/medicines/**").hasRole("ADMIN")
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/api/users/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(e -> e
@@ -46,8 +45,6 @@ public class SecurityConfig {
                         })
                 )
                 .httpBasic(Customizer.withDefaults());
-//                .formLogin(Customizer.withDefaults())
-
         return http.build();
     }
 

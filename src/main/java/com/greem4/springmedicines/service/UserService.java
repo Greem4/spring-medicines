@@ -5,10 +5,7 @@ import com.greem4.springmedicines.database.repository.UserRepository;
 import com.greem4.springmedicines.dto.ChangePasswordRequest;
 import com.greem4.springmedicines.dto.UserCreatedRequest;
 import com.greem4.springmedicines.dto.UserResponse;
-import com.greem4.springmedicines.exception.IncorrectPasswordException;
-import com.greem4.springmedicines.exception.PasswordMismatchException;
-import com.greem4.springmedicines.exception.UserAlreadyExistsException;
-import com.greem4.springmedicines.exception.UserNotFoundException;
+import com.greem4.springmedicines.exception.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -73,6 +70,10 @@ public class UserService {
 
         if (!request.newPassword().equals(request.confirmNewPassword())) {
             throw new PasswordMismatchException("Новый пароль и его подтверждение не совпадают");
+        }
+
+        if (request.newPassword().length() < 6) {
+            throw new PasswordTooShortException("Новый пароль должен быть не менее 6 символов");
         }
 
         user.setPassword(passwordEncoder.encode(request.newPassword()));
