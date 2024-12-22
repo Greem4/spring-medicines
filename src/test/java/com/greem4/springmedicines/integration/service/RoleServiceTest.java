@@ -1,6 +1,6 @@
 package com.greem4.springmedicines.integration.service;
 
-import com.greem4.springmedicines.database.entity.UserRole;
+import com.greem4.springmedicines.database.entity.Role;
 import com.greem4.springmedicines.database.repository.UserRepository;
 import com.greem4.springmedicines.dto.UserRoleUpdateRequest;
 import com.greem4.springmedicines.integration.config.IntegrationTestBase;
@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.assertj.core.api.Assertions.*;
 
-public class UserRoleServiceTest extends IntegrationTestBase {
+public class RoleServiceTest extends IntegrationTestBase {
 
     @Autowired
     private UserRepository userRepository;
@@ -21,13 +21,13 @@ public class UserRoleServiceTest extends IntegrationTestBase {
     @Test
     void testUpdateUserRole() {
         var user = userRepository.findByUsername("user").orElseThrow();
-        assertThat(user.getRole()).isEqualTo(UserRole.USER);
+        assertThat(user.getRole()).isEqualTo(Role.USER);
 
         var request = new UserRoleUpdateRequest("user", "ADMIN");
         userRoleService.updateUserRole(request);
 
         var update = userRepository.findByUsername("user").orElseThrow();
-        assertThat(update.getRole()).isEqualTo(UserRole.ADMIN);
+        assertThat(update.getRole()).isEqualTo(Role.ADMIN);
     }
 
     @Test
