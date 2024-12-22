@@ -1,10 +1,12 @@
 package com.greem4.springmedicines.http.controller;
 
+import com.greem4.springmedicines.dto.ChangePasswordRequest;
 import com.greem4.springmedicines.dto.UserCreatedRequest;
 import com.greem4.springmedicines.dto.UserResponse;
 import com.greem4.springmedicines.dto.UserRoleUpdateRequest;
 import com.greem4.springmedicines.service.UserRoleService;
 import com.greem4.springmedicines.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -33,7 +35,7 @@ public class UserAdminController {
     public Page<UserResponse> getAllUsers(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
-    ){
+    ) {
         return userService.getAllUsers(org.springframework.data.domain.PageRequest.of(page, size));
     }
 
@@ -59,6 +61,15 @@ public class UserAdminController {
     public ResponseEntity<?> disableUser(@PathVariable String username) {
         var update = userRoleService.disableUser(username);
         return ResponseEntity.ok(update);
+    }
+
+    @PutMapping("/{username}/changePassword")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void changePassword(
+            @PathVariable String username,
+            @Valid @RequestBody ChangePasswordRequest request
+    ) {
+        userService.changePassword(username, request);
     }
 
     @GetMapping("/ping")

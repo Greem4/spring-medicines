@@ -115,4 +115,7 @@ public class UserAdminControllerTest extends IntegrationTestBase {
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
+
+//    @Test
+//    void changePassword
 }

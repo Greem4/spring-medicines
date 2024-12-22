@@ -2,11 +2,16 @@ package com.greem4.springmedicines.service;
 
 import com.greem4.springmedicines.database.entity.User;
 import com.greem4.springmedicines.database.repository.UserRepository;
+import com.greem4.springmedicines.dto.ChangePasswordRequest;
 import com.greem4.springmedicines.dto.UserCreatedRequest;
 import com.greem4.springmedicines.dto.UserResponse;
+import com.greem4.springmedicines.exception.IncorrectPasswordException;
+import com.greem4.springmedicines.exception.PasswordMismatchException;
 import com.greem4.springmedicines.exception.UserAlreadyExistsException;
 import com.greem4.springmedicines.exception.UserNotFoundException;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -55,5 +60,22 @@ public class UserService {
                 user.getRole(),
                 user.isEnabled()
         );
+    }
+
+    @SneakyThrows
+    public void changePassword(String username, @Valid ChangePasswordRequest request) {
+        var user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UserNotFoundException("Пользователь не найден: " + username));
+
+        if (!passwordEncoder.matches(request.oldPassword(), user.getPassword())) {
+            throw new IncorrectPasswordException("Старый пароль введён неверно");
+        }
+
+        if (!request.newPassword().equals(request.confirmNewPassword())) {
+            throw new PasswordMismatchException("Новый пароль и его подтверждение не совпадают");
+        }
+
+        user.setPassword(passwordEncoder.encode(request.newPassword()));
+        userRepository.save(user);
     }
 }
