@@ -1,10 +1,22 @@
 spring:
+  mail:
+    host: localhost
+    port: 3025
+    username: test@localhost
+    password: test
+    protocol: smtp
+    properties:
+      mail.smtp.auth: false
+      mail.smtp.starttls.enable: false
+
   jpa:
     hibernate:
       ddl-auto: update
     show-sql: true
+
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.yaml
+
 logging:
   level:
 #    org.springframework: DEBUG

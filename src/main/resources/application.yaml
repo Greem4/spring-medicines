@@ -25,8 +25,10 @@ spring:
       pool-name: HikariPool-1
       max-lifetime: 1800000
       connection-timeout: 30000
+
   liquibase:
     change-log: classpath:/db/changelog/db.changelog-master.yaml
+
   jpa:
     properties:
         hibernate:
@@ -36,14 +38,30 @@ spring:
     hibernate:
       ddl-auto: update
     open-in-view: false
+
   output:
     ansi:
       enabled: always
+
   thymeleaf:
     enabled: true
     prefix: classpath:/templates/
     suffix: .html
     check-template-location: false
+
+  mail:
+    host: smtp.yandex.ru
+    port: 465
+    username: medicineSpringMail@yandex.ru
+    password: Xj6-qZJ-dMz-Vmg
+    protocol: smtp
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
 springdoc:
   api-docs:
     path: /api-docs
