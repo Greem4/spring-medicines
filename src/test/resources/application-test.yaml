@@ -6,7 +6,7 @@ spring:
     password: test
     protocol: smtp
     properties:
-      mail.smtp.auth: false
+      mail.smtp.auth: true
       mail.smtp.starttls.enable: false
 
   jpa:

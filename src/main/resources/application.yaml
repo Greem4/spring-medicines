@@ -1,3 +1,8 @@
+app:
+  mail:
+    sender: ${MAIL_SET_FROM}
+    to: ${MAIL_TO}
+
 logging:
   pattern:
     dateformat: dd-MM-yyyy 'T' HH:mm:ss
@@ -14,9 +19,9 @@ logging:
 
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/medicines_db
-    username: post
-    password: post
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
     hikari:
       minimum-idle: 2
@@ -51,16 +56,21 @@ spring:
 
   mail:
     host: smtp.yandex.ru
-    port: 465
-    username: medicineSpringMail@yandex.ru
-    password: Xj6-qZJ-dMz-Vmg
+    port: 587
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
     protocol: smtp
     properties:
       mail:
         smtp:
           auth: true
-          starttls:
+          starttls.enable: true
+          from: ${MAIL_SET_FROM}
+          tls:
             enable: true
+          connection timeout: 5000
+          timeout: 5000
+          write timeout: 5000
 
 springdoc:
   api-docs:

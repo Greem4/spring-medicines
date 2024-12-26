@@ -23,12 +23,22 @@ class MedicineServiceTest extends IntegrationTestBase {
 
     @Test
     void getAllMedicines() {
-        var page = medicineService.getAllMedicines(PageRequest.of(0, 3));
+        var created1 = new MedicineCreateRequest("Анальгин", "3000", LocalDate.now().plusMonths(1));
+        var created2 = new MedicineCreateRequest("Аспирин", "3000", LocalDate.now().plusMonths(1));
+        var created3 = new MedicineCreateRequest("Ибупрофен", "3000", LocalDate.now().plusMonths(1));
+        medicineService.addMedicine(created1);
+        medicineService.addMedicine(created2);
+        medicineService.addMedicine(created3);
 
-        assertThat(page.getTotalElements()).isGreaterThanOrEqualTo(2);
-        assertThat(page.getContent())
-                .extracting(MedicineView::name)
-                .containsExactlyInAnyOrder("Анальгин", "Аспирин", "Ибупрофен");
+        var page = medicineService.getAllMedicines(PageRequest.of(0, 10));
+
+        assertThat(page.getTotalElements()).isEqualTo(4);
+
+        var medicineNames = page.getContent().stream()
+                .map(MedicineView::name)
+                .toList();
+
+        assertThat(medicineNames).containsExactlyInAnyOrder("Анальгин", "Аспирин", "Ибупрофен", "тест");
     }
 
     @Test
@@ -45,8 +55,7 @@ class MedicineServiceTest extends IntegrationTestBase {
         assertThat(view.name()).isEqualTo("Aspirin");
         assertThat(view.serialNumber()).isEqualTo("30121");
         assertThat(view.expirationDate()).isEqualTo(
-                LocalDate.now().plusMonths(1).format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))
-        );
+                LocalDate.now().plusMonths(1).format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
         assertThat(view.color()).isEqualTo("red");
     }
 
@@ -78,7 +87,7 @@ class MedicineServiceTest extends IntegrationTestBase {
 
     @Test
     void deleteMedicines() {
-        var deleteMedicine = medicineService.findById(4L);
+        var deleteMedicine = medicineService.findById(1L);
         assertThat(deleteMedicine).isPresent();
 
         medicineService.deleteMedicine(deleteMedicine.orElseThrow().id());
