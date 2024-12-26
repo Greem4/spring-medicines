@@ -13,9 +13,9 @@ import java.util.List;
 public interface MedicineRepository extends JpaRepository<Medicine, Long> {
 
     @Query("""
-            select new com.greem4.springmedicines.dto.MedicineExpiryNotificationDTO(m.name, m.expirationDate)
-            from Medicine m
-            where m.expirationDate < : date
-            """)
+        select new com.greem4.springmedicines.dto.MedicineExpiryNotificationDTO(m.name, m.serialNumber, m.expirationDate)
+        from Medicine m
+        where m.expirationDate < :date
+    """)
     List<MedicineExpiryNotificationDTO> findAllExpiringBefore(LocalDate date);
 }

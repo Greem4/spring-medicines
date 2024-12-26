@@ -9,6 +9,9 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.Locale;
 
 @Component
 @RequiredArgsConstructor
@@ -17,27 +20,86 @@ public class ExpiryNotificationScheduler {
     private final MedicineRepository medicineRepository;
     private final NotificationService notificationService;
 
-    @Scheduled(cron = "0 0 9 * * ?")
+    @Scheduled(cron = "0 0 9 * * ?") // Запуск каждый день в 9:00 утра
     public void notifyMedicineExpiringSoon() {
-        var oneWeekLater = LocalDate.now().plusWeeks(1);
+        LocalDate limitDate = LocalDate.now().plusWeeks(1);
 
-        var expiringList = medicineRepository.findAllExpiringBefore(oneWeekLater);
+        List<MedicineExpiryNotificationDTO> expiringList = medicineRepository.findAllExpiringBefore(limitDate);
 
-        for (MedicineExpiryNotificationDTO data : expiringList) {
-            sendExpiryNotification(data);
+        if (expiringList.isEmpty()) {
+            return;
         }
-    }
 
-    private void sendExpiryNotification(MedicineExpiryNotificationDTO data) {
-        var subject = "Срок годности лекарства приближается";
-        var body = String.format("Срок годности препарата: %s истекает %s.",
-                data.name(), data.expiryDate());
+        String subject = "Уведомление: Срок годности препаратов истекает через неделю";
+        String body = buildNotificationBody(expiringList);
 
-        var message = new NotificationMessage(
+        NotificationMessage message = new NotificationMessage(
                 "greem4@yandex.ru",
                 subject,
                 body
         );
         notificationService.sendNotification(message);
     }
+
+    private String buildNotificationBody(List<MedicineExpiryNotificationDTO> dtos) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("<html><body>");
+
+        sb.append("<h2 style=\"color:#333333;\">Срок годности истекает через неделю:</h2>");
+
+        sb.append("<table style=\"width:100%; border-collapse: collapse;\">");
+
+        sb.append("<thead>");
+        sb.append("<tr>");
+        sb.append("<th style=\"border: 1px solid #dddddd; text-align: left; padding: 8px; background-color:#f2f2f2;\">№</th>");
+        sb.append("<th style=\"border: 1px solid #dddddd; text-align: left; padding: 8px; background-color:#f2f2f2;\">Название препарата</th>");
+        sb.append("<th style=\"border: 1px solid #dddddd; text-align: left; padding: 8px; background-color:#f2f2f2;\">Серия</th>");
+        sb.append("<th style=\"border: 1px solid #dddddd; text-align: left; padding: 8px; background-color:#f2f2f2;\">Срок годности</th>");
+        sb.append("</tr>");
+        sb.append("</thead>");
+
+        sb.append("<tbody>");
+
+        int i = 1;
+        for (MedicineExpiryNotificationDTO dto : dtos) {
+            String rowColor = (i % 2 == 0) ? "#f9f9f9" : "#ffffff";
+            sb.append("<tr style=\"background-color:").append(rowColor).append(";\">");
+
+            sb.append("<td style=\"border: 1px solid #dddddd; padding: 8px;\">").append(i++).append("</td>");
+
+            sb.append("<td style=\"border: 1px solid #dddddd; padding: 8px;\">")
+                    .append("<span style=\"color:red; font-weight:bold;\">")
+                    .append(escapeHtml(dto.name()))
+                    .append("</span>")
+                    .append("</td>");
+
+            sb.append("<td style=\"border: 1px solid #dddddd; padding: 8px;\">")
+                    .append(escapeHtml(dto.serialNumber()))
+                    .append("</td>");
+
+            sb.append("<td style=\"border: 1px solid #dddddd; padding: 8px;\">")
+                    .append(escapeHtml(dto.expiryDate()  // TODO однажды подумать над форматом
+                            .format(DateTimeFormatter.ofPattern("dd MMM yyyy", Locale.forLanguageTag("ru")))))
+                    .append("</td>");
+
+            sb.append("</tr>");
+        }
+
+        sb.append("</tbody>");
+        sb.append("</table>");
+        sb.append("</body></html>");
+        return sb.toString();
+    }
+
+    private String escapeHtml(String text) {
+        if (text == null) {
+            return "";
+        }
+        return text.replace("&", "&amp;")
+                .replace("<", "&lt;")
+                .replace(">", "&gt;")
+                .replace("\"", "&quot;")
+                .replace("'", "&#39;");
+    }
+
 }

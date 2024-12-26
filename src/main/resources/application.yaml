@@ -51,16 +51,21 @@ spring:
 
   mail:
     host: smtp.yandex.ru
-    port: 465
+    port: 587
     username: medicineSpringMail@yandex.ru
-    password: Xj6-qZJ-dMz-Vmg
+    password: virrcmbolxopbluu
     protocol: smtp
     properties:
       mail:
         smtp:
           auth: true
-          starttls:
+          starttls.enable: true
+          from: medicineSpringMail@yandex.ru
+          tls:
             enable: true
+          connection timeout: 5000
+          timeout: 5000
+          write timeout: 5000
 
 springdoc:
   api-docs:
