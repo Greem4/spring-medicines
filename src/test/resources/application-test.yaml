@@ -1,3 +1,8 @@
+app:
+  mail:
+    sender: test@locahost
+    to: test-recipient@mail.com
+
 spring:
   mail:
     host: localhost

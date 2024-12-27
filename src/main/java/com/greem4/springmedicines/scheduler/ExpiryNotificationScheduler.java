@@ -24,7 +24,7 @@ public class ExpiryNotificationScheduler {
     private final MedicineRepository medicineRepository;
     private final NotificationService notificationService;
 
-    @Scheduled(cron = "0 0 7 * * ?") // Запуск каждый день в 9:00 утра
+    @Scheduled(cron = "0 0 7 * * ?")
     public void notifyMedicineExpiringSoon() {
         LocalDate limitDate = LocalDate.now().plusWeeks(1);
 

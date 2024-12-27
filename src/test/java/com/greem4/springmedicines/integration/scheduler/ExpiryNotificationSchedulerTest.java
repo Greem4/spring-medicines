@@ -41,7 +41,7 @@ public class ExpiryNotificationSchedulerTest extends IntegrationTestBase {
         MimeMessage msg = messages[0];
         assertThat(msg.getSubject())
                 .isEqualTo("Уведомление: Срок годности препаратов истекает через неделю");
-        assertThat(msg.getAllRecipients()[0].toString()).isEqualTo("greem4@yandex.ru");
+        assertThat(msg.getAllRecipients()[0].toString()).isEqualTo("test-recipient@mail.com");
 
         String body = extractBodyContent(msg);
 
@@ -73,7 +73,7 @@ public class ExpiryNotificationSchedulerTest extends IntegrationTestBase {
         MimeMessage msg = messages[0];
         assertThat(msg.getSubject())
                 .isEqualTo("Уведомление: Срок годности препаратов истекает через неделю");
-        assertThat(msg.getAllRecipients()[0].toString()).isEqualTo("greem4@yandex.ru");
+        assertThat(msg.getAllRecipients()[0].toString()).isEqualTo("test-recipient@mail.com");
 
         String body = extractBodyContent(msg);
 
