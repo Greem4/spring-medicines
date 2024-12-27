@@ -1,5 +1,9 @@
 package com.greem4.springmedicines.integration.config;
 
+import com.icegreen.greenmail.util.GreenMail;
+import com.icegreen.greenmail.util.ServerSetup;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
@@ -20,8 +24,25 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 public abstract class IntegrationTestBase {
 
+    protected GreenMail greenMail;
+
     @Container
     protected static final PostgreSQLContainer<?> POSTGRESQL_CONTAINER = new PostgreSQLContainer<>("postgres:17-alpine");
+
+    @BeforeEach
+    void setUpGreenMail() {
+        var smtpSetup = new ServerSetup(3025, null, "smtp");
+        greenMail = new GreenMail(smtpSetup);
+        greenMail.setUser("test@localhost", "test");
+        greenMail.start();
+    }
+
+    @AfterEach
+    void tearDown() {
+        if (greenMail != null) {
+            greenMail.stop();
+        }
+    }
 
     @DynamicPropertySource
     static void registerPgProperties(DynamicPropertyRegistry registry) {

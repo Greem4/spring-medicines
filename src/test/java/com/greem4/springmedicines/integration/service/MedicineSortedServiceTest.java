@@ -7,9 +7,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.test.context.jdbc.Sql;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Sql(scripts = "classpath:sql/dataBySort.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 public class MedicineSortedServiceTest extends IntegrationTestBase {
 
     @Autowired

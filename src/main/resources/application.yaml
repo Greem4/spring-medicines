@@ -1,3 +1,8 @@
+app:
+  mail:
+    sender: ${MAIL_SET_FROM}
+    to: ${MAIL_TO}
+
 logging:
   pattern:
     dateformat: dd-MM-yyyy 'T' HH:mm:ss
@@ -14,9 +19,9 @@ logging:
 
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/medicines_db
-    username: post
-    password: post
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
     hikari:
       minimum-idle: 2
@@ -25,8 +30,10 @@ spring:
       pool-name: HikariPool-1
       max-lifetime: 1800000
       connection-timeout: 30000
+
   liquibase:
     change-log: classpath:/db/changelog/db.changelog-master.yaml
+
   jpa:
     properties:
         hibernate:
@@ -36,14 +43,35 @@ spring:
     hibernate:
       ddl-auto: update
     open-in-view: false
+
   output:
     ansi:
       enabled: always
+
   thymeleaf:
     enabled: true
     prefix: classpath:/templates/
     suffix: .html
     check-template-location: false
+
+  mail:
+    host: smtp.yandex.ru
+    port: 587
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    protocol: smtp
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls.enable: true
+          from: ${MAIL_SET_FROM}
+          tls:
+            enable: true
+          connection timeout: 5000
+          timeout: 5000
+          write timeout: 5000
+
 springdoc:
   api-docs:
     path: /api-docs
