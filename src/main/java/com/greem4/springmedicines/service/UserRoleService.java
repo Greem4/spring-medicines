@@ -1,7 +1,7 @@
 package com.greem4.springmedicines.service;
 
 import com.greem4.springmedicines.database.entity.User;
-import com.greem4.springmedicines.database.entity.UserRole;
+import com.greem4.springmedicines.database.entity.Role;
 import com.greem4.springmedicines.database.repository.UserRepository;
 import com.greem4.springmedicines.dto.UserRoleUpdateRequest;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +18,7 @@ public class UserRoleService {
         var user = userRepository.findByUsername(request.username())
                 .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден"));
 
-        user.setRole(UserRole.valueOf(request.role().toUpperCase()));
+        user.setRole(Role.valueOf(request.role().toUpperCase()));
         return userRepository.save(user);
     }
 

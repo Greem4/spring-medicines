@@ -14,6 +14,7 @@ import org.springframework.http.*;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -25,36 +26,51 @@ class MedicineRestControllerTest extends IntegrationTestBase {
 
     @Test
     void getAllMedicines() {
+        var requests = Arrays.asList(
+                new MedicineCreateRequest("Аспирин", "3000", LocalDate.now().plusMonths(3)),
+                new MedicineCreateRequest("Парацетамол", "2000", LocalDate.now().plusMonths(6)),
+                new MedicineCreateRequest("Ибупрофен", "1500", LocalDate.now().plusMonths(2))
+        );
+
+        for (MedicineCreateRequest request : requests) {
+            var response = createMedicine(request);
+
+            assertThat(response.getStatusCode()).isIn(HttpStatus.OK, HttpStatus.CREATED);
+        }
+
         ResponseEntity<PagedModel<EntityModel<MedicineView>>> response = testRestTemplate
-                .exchange("/api/medicines", HttpMethod.GET, null, new ParameterizedTypeReference<>() {});
+                .exchange("/api/medicines", HttpMethod.GET, null, new ParameterizedTypeReference<>() {
+                });
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         var body = response.getBody();
         assertThat(body).isNotNull();
         var medicines = body.getContent();
-        assertThat(medicines).hasSizeGreaterThanOrEqualTo(2);
+        assertThat(medicines).hasSizeGreaterThanOrEqualTo(3);
         assertThat(medicines.stream().map(m -> Objects.requireNonNull(m.getContent()).name()))
-                .contains("Аспирин", "Парацетамол");
+                .contains("Аспирин", "Парацетамол", "Ибупрофен");
     }
 
     @Test
     void getMedicineById() {
-        var response = testRestTemplate
-                .getForEntity("/api/medicines/1", MedicineView.class);
+        var request = new MedicineCreateRequest("Аспирин", "3000", LocalDate.now().plusMonths(3));
 
-        assertThat(testRestTemplate.getForEntity("/api/medicines/1", MedicineView.class).getStatusCode()).isEqualTo(HttpStatus.OK);
+        createMedicine(request);
+
+        var response = testRestTemplate
+                .getForEntity("/api/medicines/2", MedicineView.class);
+
+        assertThat(testRestTemplate.getForEntity("/api/medicines/2", MedicineView.class).getStatusCode()).isEqualTo(HttpStatus.OK);
         var medicine = response.getBody();
         assertThat(medicine).isNotNull();
         assertThat(medicine.name()).isEqualTo("Аспирин");
-        assertThat(medicine.serialNumber()).isEqualTo("SN101");
+        assertThat(medicine.serialNumber()).isEqualTo("3000");
     }
 
     @Test
     void addMedicine() {
         var request = new MedicineCreateRequest("Ибупрофен", "3000", LocalDate.now().plusMonths(3));
-        var response = testRestTemplate
-                .withBasicAuth("admin", "admin")
-                .postForEntity("/api/medicines", request, MedicineView.class);
+        var response = createMedicine(request);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         var created = response.getBody();
@@ -66,10 +82,10 @@ class MedicineRestControllerTest extends IntegrationTestBase {
 
     @Test
     void updateMedicine() {
-        var updateRequest = new MedicineUpdateRequest("Новый аспирин", "5000", LocalDate.now().plusWeeks(2));
+        var request = new MedicineUpdateRequest("Новый аспирин", "5000", LocalDate.now().plusWeeks(2));
         var headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        var entity = new HttpEntity<>(updateRequest, headers);
+        var entity = new HttpEntity<>(request, headers);
 
         var response = testRestTemplate
                 .withBasicAuth("admin", "admin")
@@ -89,16 +105,16 @@ class MedicineRestControllerTest extends IntegrationTestBase {
     void deleteMedicine() {
         var response = testRestTemplate
                 .withBasicAuth("admin", "admin")
-                .exchange("/api/medicines/2", HttpMethod.DELETE, null, Void.class);
+                .exchange("/api/medicines/1", HttpMethod.DELETE, null, Void.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
 
-        var notFoundResponse = testRestTemplate.getForEntity("/api/medicines/2", String.class);
+        var notFoundResponse = testRestTemplate.getForEntity("/api/medicines/1", String.class);
         assertThat(notFoundResponse.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 
     @Test
     void testGetMedicineByIdNotFound() {
-        ResponseEntity<String> response = testRestTemplate.getForEntity("/api/medicines/999", String.class);
+        var response = testRestTemplate.getForEntity("/api/medicines/999", String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 
@@ -123,5 +139,11 @@ class MedicineRestControllerTest extends IntegrationTestBase {
                 .withBasicAuth("admin", "admin")
                 .exchange("/api/medicines/999", HttpMethod.DELETE, null, String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    private ResponseEntity<MedicineView> createMedicine(MedicineCreateRequest request) {
+        return testRestTemplate
+                .withBasicAuth("admin", "admin")
+                .postForEntity("/api/medicines", request, MedicineView.class);
     }
 }

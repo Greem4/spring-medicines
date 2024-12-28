@@ -7,7 +7,7 @@ plugins {
 apply from: 'version.gradle'
 
 group = 'com.greem4'
-version = '0.0.1-SNAPSHOT'
+version = '0.1.1-SNAPSHOT'
 
 java {
     toolchain {
@@ -33,6 +33,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-aop'
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-hateoas'
     implementation 'org.springframework.boot:spring-boot-starter-security'
@@ -57,6 +58,7 @@ dependencies {
     testImplementation 'org.testcontainers:postgresql'
     testImplementation "org.mockito:mockito-inline:${versions.mockito}"
     testImplementation "org.jacoco:org.jacoco.agent:${versions.jacoco}"
+    testImplementation "com.icegreen:greenmail:${versions.greenmail}"
 
 
     testCompileOnly 'org.projectlombok:lombok'

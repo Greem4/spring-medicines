@@ -7,16 +7,18 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.test.context.jdbc.Sql;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Sql(scripts = "classpath:sql/dataBySort.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 public class MedicineSortedServiceTest extends IntegrationTestBase {
 
     @Autowired
     private MedicineService medicineService;
 
     @Test
-    void testGetAllMedicines() {
+    void getAllMedicines() {
         var page = medicineService.getAllMedicines(PageRequest.of(0, 10));
 
         assertThat(page.getTotalElements()).isEqualTo(10);
@@ -37,7 +39,7 @@ public class MedicineSortedServiceTest extends IntegrationTestBase {
     }
 
     @Test
-    void testSortByExpirationDateASC() {
+    void sortByExpirationDateASC() {
         var pageRequest = PageRequest.of(0, 10, Sort.by(Sort.Direction.ASC, "expirationDate"));
         var page = medicineService.getAllMedicines(pageRequest);
 
@@ -59,7 +61,7 @@ public class MedicineSortedServiceTest extends IntegrationTestBase {
     }
 
     @Test
-    void testSortByExpirationDateDESC() {
+    void sortByExpirationDateDESC() {
         var pageRequest = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "expirationDate"));
         var page = medicineService.getAllMedicines(pageRequest);
 
@@ -81,7 +83,7 @@ public class MedicineSortedServiceTest extends IntegrationTestBase {
     }
 
     @Test
-    void testSortByNameAsc() {
+    void sortByNameAsc() {
         var pageRequest = PageRequest.of(0, 10, Sort.by(Sort.Direction.ASC, "name"));
         var page = medicineService.getAllMedicines(pageRequest);
 
@@ -103,7 +105,7 @@ public class MedicineSortedServiceTest extends IntegrationTestBase {
     }
 
     @Test
-    void testSortByNameDesc() {
+    void sortByNameDesc() {
         var pageRequest = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "name"));
         var page = medicineService.getAllMedicines(pageRequest);
 
@@ -126,7 +128,7 @@ public class MedicineSortedServiceTest extends IntegrationTestBase {
     }
 
     @Test
-    void testSortByExpirationDateDescAndNameAsc() {
+    void sortByExpirationDateDescAndNameAsc() {
         var pageRequest = PageRequest.of(0, 10, Sort.by(
                 Sort.Order.desc("expirationDate"),
                 Sort.Order.asc("name")
