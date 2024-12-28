@@ -10,5 +10,4 @@ public record UserCreatedRequest(
         @NotNull Role role,
         boolean enabled
         ) {
-
 }
