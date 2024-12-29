@@ -11,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -19,13 +19,12 @@ import org.springframework.stereotype.Service;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
+    private final BCryptPasswordEncoder passwordEncoder;
 
     public UserResponse createUser(UserCreatedRequest request) {
         if (userRepository.existsByUsername(request.username())) {
             throw new UserAlreadyExistsException("Пользователь с таким именем уже существует");
         }
-
         var user = User.builder()
                 .username(request.username())
                 .password(passwordEncoder.encode(request.password()))

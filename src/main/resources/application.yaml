@@ -3,6 +3,10 @@ app:
     sender: ${MAIL_SET_FROM}
     to: ${MAIL_TO}
 
+jwt:
+  secret: ${JWT_SECRET}
+  expirationMs: ${JWT_EXPIRATION_MS}
+
 logging:
   pattern:
     dateformat: dd-MM-yyyy 'T' HH:mm:ss

@@ -24,7 +24,7 @@ public class UserAdminControllerTest extends IntegrationTestBase {
 
     @Test
     void createUser() {
-        var createRequest = new UserCreatedRequest("user1", "123", Role.USER, true);
+        var createRequest = new UserCreatedRequest("user1", "123456", Role.USER, true);
 
         var response = testRestTemplate
                 .withBasicAuth("admin", "admin")
@@ -53,7 +53,7 @@ public class UserAdminControllerTest extends IntegrationTestBase {
 
     @Test
     void createUserWithoutAuth() {
-        var createRequest = new UserCreatedRequest("user2", "123", Role.USER, true);
+        var createRequest = new UserCreatedRequest("user2", "123456", Role.USER, true);
 
         var response = testRestTemplate
                 .postForEntity("/api/admin/users", createRequest, String.class);
@@ -85,7 +85,6 @@ public class UserAdminControllerTest extends IntegrationTestBase {
                 .getForEntity("/api/admin/users/ping", String.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-
         assertThat(response.getBody()).isEqualTo("pong");
     }
 
@@ -119,10 +118,10 @@ public class UserAdminControllerTest extends IntegrationTestBase {
 
     @Test
     void changePasswordAdminAuth() {
-        var changePasswordRequest = new ChangePasswordRequest("admin2", "123456", "123456");
+        var changePasswordRequest = new ChangePasswordRequest("user", "123456", "123456");
 
         var response = testRestTemplate
-                .withBasicAuth("admin2", "admin2")
+                .withBasicAuth("user", "user")
                 .exchange("/api/users/changePassword",
                         HttpMethod.PUT,
                         new HttpEntity<>(changePasswordRequest),
@@ -131,11 +130,11 @@ public class UserAdminControllerTest extends IntegrationTestBase {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
 
         var profileResponse = testRestTemplate
-                .withBasicAuth("admin2", "123456")
+                .withBasicAuth("user", "123456")
                 .getForEntity("/api/users/profile", UserResponse.class);
 
         assertThat(profileResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(profileResponse.getBody()).isNotNull();
-        assertThat(Objects.requireNonNull(profileResponse.getBody()).username()).isEqualTo("admin2");
+        assertThat(Objects.requireNonNull(profileResponse.getBody()).username()).isEqualTo("user");
     }
 }

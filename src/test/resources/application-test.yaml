@@ -1,6 +1,10 @@
+jwt:
+  secret: "aVerySecureAndLongSecretKeyForJWTAuthentication123!"
+  expirationMs: 60000
+
 app:
   mail:
-    sender: test@locahost
+    sender: test@localhost
     to: test-recipient@mail.com
 
 spring:
@@ -24,7 +28,6 @@ spring:
 
 logging:
   level:
-#    org.springframework: DEBUG
     org.testcontainers: DEBUG
     org.hibernate.SQL: DEBUG
     org.hibernate.type.descriptor.sql.BasicBinder: TRACE
