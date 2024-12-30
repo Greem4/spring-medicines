@@ -16,7 +16,7 @@ logging:
     com.greem4.springmedicines.util.aspect: info
     com.zaxxer.hikari: info
     org.hibernate: info
-    org.springframework.security: debug
+    org.springframework.security: info
     org.hibernate.orm.connections.pooling: OFF
   file:
     name: ./logs/loggingFile.log
