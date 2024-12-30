@@ -6,7 +6,7 @@ import com.greem4.springmedicines.integration.config.IntegrationTestBase;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.hateoas.PagedModel;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 
 import java.time.LocalDate;
@@ -14,14 +14,16 @@ import java.util.Map;
 
 import static org.assertj.core.api.Assertions.*;
 
-public class MedicineSecurityIntegrationTest extends IntegrationTestBase {
+public class MedicineSecurityTest extends IntegrationTestBase {
 
     @Autowired
     private TestRestTemplate testRestTemplate;
 
     @Test
     void getAllWithoutAuth() {
-        var response = testRestTemplate.getForEntity("/api/medicines", PagedModel.class);
+        var response = testRestTemplate
+                .exchange("/api/medicines", HttpMethod.GET, null,
+                        new ParameterizedTypeReference<>() {});
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).isNotNull();
     }
