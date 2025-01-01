@@ -26,6 +26,12 @@ public class User {
     @Column(nullable = false)
     private Role role;
 
+    @Column
+    private String provider;
+
+    @Column
+    private String providerId;
+
     @Column(nullable = false)
     private boolean enabled ;
 }

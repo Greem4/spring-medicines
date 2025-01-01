@@ -1,23 +1,29 @@
 package com.greem4.springmedicines.http.controller;
 
-import com.greem4.springmedicines.dto.JwtResponse;
+import com.greem4.springmedicines.database.entity.User;
 import com.greem4.springmedicines.dto.LoginRequest;
+import com.greem4.springmedicines.dto.LoginResponse;
 import com.greem4.springmedicines.dto.RegisterRequest;
 import com.greem4.springmedicines.dto.UserResponse;
-import com.greem4.springmedicines.security.CustomUserDetails;
-import com.greem4.springmedicines.security.JwtUtils;
+import com.greem4.springmedicines.util.security.JwtUtils;
 import com.greem4.springmedicines.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
+@Slf4j
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
@@ -34,25 +40,33 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<JwtResponse> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
-        var authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginRequest.username(), loginRequest.password())
+    public Map<String, Object> login(@RequestParam String username,
+                                     @RequestParam String password) {
+        log.debug("Attempting to authenticate user: {}", username);
+
+        // 1. Аутентификация через Spring Security
+        Authentication auth = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(username, password)
         );
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        var jwt = jwtUtils.generateJwtToken(authentication);
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        // Если дошли сюда — логин/пароль корректны
+        log.debug("Authentication successful for user: {}", username);
 
-        var jwtResponse = new JwtResponse(
-                jwt,
-                "Bearer",
-                userDetails.getId(),
-                userDetails.getUsername(),
-                userDetails.getRole()
-        );
+        // 2. Генерим JWT
+        String jwt = jwtUtils.generateJwtToken(username);
+        log.debug("Generated JWT for user {}: {}", username, jwt);
 
-        return ResponseEntity.ok(jwtResponse);
+        // 3. Возвращаем «OAuth2 token response» (имитация)
+        Map<String, Object> response = new HashMap<>();
+        response.put("access_token", jwt);
+        response.put("token_type", "Bearer");
+        response.put("expires_in", 3600);
+        response.put("scope", "read write");
+
+        log.debug("Returning token response to client for user: {}", username);
+        return response;
     }
+
 
     @PostMapping("/logout")
     public ResponseEntity<String> logout() {

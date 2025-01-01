@@ -1,5 +1,6 @@
 package com.greem4.springmedicines.service;
 
+import com.greem4.springmedicines.database.entity.User;
 import com.greem4.springmedicines.database.repository.UserRepository;
 import com.greem4.springmedicines.security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
@@ -14,9 +15,9 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        var user = userRepository.findByUsername(username)
+        User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден: " + username));
 
-      return new CustomUserDetails(user);
+        return new CustomUserDetails(user);
     }
 }

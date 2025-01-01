@@ -1,53 +1,42 @@
-package com.greem4.springmedicines.security;
+package com.greem4.springmedicines.util.security;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
-import jakarta.annotation.PostConstruct;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import java.security.Key;
+import java.util.Date;
 
 @Slf4j
 @Component
 public class JwtUtils {
 
-    @Value("${jwt.secret}")
-    private String jwtSecret;
+    @Getter
+    private final Key key;
+    private final long jwtExpirationMs;
 
-    @Value("${jwt.expirationMs}")
-    private int jwtExpirationMs;
-
-    private Key key;
-
-    @PostConstruct
-    public void init() {
-        log.info("Initializing JwtUtils with secret: {} and expirationMs: {}", jwtExpirationMs, jwtSecret);
+    public JwtUtils(@Value("${jwt.secret}") String jwtSecret,
+                    @Value("${jwt.expirationMs}") long jwtExpirationInMs) {
         this.key = Keys.hmacShaKeyFor(jwtSecret.getBytes());
+        this.jwtExpirationMs = jwtExpirationInMs;
     }
 
-    public String generateJwtToken(Authentication authentication) {
-        CustomUserDetails userPrincipal = (CustomUserDetails) authentication.getPrincipal();
-
+    public String generateJwtToken(String username) {
         return Jwts.builder()
-                .claim("username", userPrincipal.getUsername())
-                .claim("iat", System.currentTimeMillis() / 1000)
-                .claim("exp", (System.currentTimeMillis() + jwtExpirationMs) / 1000)
+                .subject(username)
+                .issuedAt(new Date())
+                .expiration(new Date((new Date()).getTime() + jwtExpirationMs))
                 .signWith(key)
                 .compact();
     }
 
-    public String getUserNameFromJwtToken(String token) {
-        Claims claims = Jwts.parser()
-                .decryptWith((SecretKey) key)
-                .build()
-                .parseSignedClaims(token)
-                .getPayload();
-
-        return claims.getSubject();
+    public String getUsernameFromJwtToken(String token) {
+        return Jwts.parser().verifyWith((SecretKey) key).build()
+                .parseSignedClaims(token).getPayload().getSubject();
     }
 
     public boolean validateJwtToken(String authToken) {

@@ -8,6 +8,8 @@ public record UserCreatedRequest(
         @NotBlank String username,
         @NotBlank String password,
         @NotNull Role role,
-        boolean enabled
+        boolean enabled,
+        String provider,
+        String providerId
         ) {
 }
