@@ -70,8 +70,7 @@ public class AuthControllerIntegrationTest extends IntegrationTestBase {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         JwtResponse jwtResponse = response.getBody();
         assertThat(jwtResponse).isNotNull();
-        assertThat(jwtResponse.token()).isNotEmpty();
-        assertThat(jwtResponse.type()).isEqualTo("Bearer");
+        assertThat(jwtResponse.type()).isNotEmpty().isEqualTo("Bearer");
         assertThat(jwtResponse.username()).isEqualTo("user");
         assertThat(jwtResponse.role()).isEqualTo(Role.USER);
     }

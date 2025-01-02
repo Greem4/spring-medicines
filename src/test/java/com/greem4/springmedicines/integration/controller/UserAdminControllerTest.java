@@ -1,17 +1,13 @@
 package com.greem4.springmedicines.integration.controller;
 
 import com.greem4.springmedicines.database.entity.Role;
-import com.greem4.springmedicines.dto.ChangePasswordRequest;
-import com.greem4.springmedicines.dto.UserCreatedRequest;
-import com.greem4.springmedicines.dto.UserResponse;
-import com.greem4.springmedicines.dto.UserRoleUpdateRequest;
+import com.greem4.springmedicines.dto.*;
 import com.greem4.springmedicines.integration.config.IntegrationTestBase;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.*;
 
 import java.util.Objects;
 
@@ -24,11 +20,14 @@ public class UserAdminControllerTest extends IntegrationTestBase {
 
     @Test
     void createUser() {
-        var createRequest = new UserCreatedRequest("user1", "123456", Role.USER, true);
+        var createRequest = new UserCreatedRequest("user1", "123456", Role.USER, true, null, null);
 
-        var response = testRestTemplate
-                .withBasicAuth("admin", "admin")
-                .postForEntity("/api/admin/users", createRequest, UserResponse.class);
+        var auth = getAuth();
+
+        var headers = auth.getHeaders();
+        var requestEntity = new HttpEntity<>(createRequest, headers);
+
+        var response = testRestTemplate.exchange("/api/admin/users", HttpMethod.POST, requestEntity, UserResponse.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 
@@ -38,9 +37,7 @@ public class UserAdminControllerTest extends IntegrationTestBase {
         assertThat(createdUser.role()).isEqualTo(Role.USER);
         assertThat(createdUser.enable()).isTrue();
 
-        var getResponse = testRestTemplate
-                .withBasicAuth("admin", "admin")
-                .getForEntity("/api/admin/users/user1", UserResponse.class);
+        var getResponse = testRestTemplate.exchange("/api/admin/users/user1", HttpMethod.GET, new HttpEntity<>(headers), UserResponse.class);
 
         assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -51,9 +48,10 @@ public class UserAdminControllerTest extends IntegrationTestBase {
         assertThat(body.enable()).isTrue();
     }
 
+
     @Test
     void createUserWithoutAuth() {
-        var createRequest = new UserCreatedRequest("user2", "123456", Role.USER, true);
+        var createRequest = new UserCreatedRequest("user2", "123456", Role.USER, true, null, null);
 
         var response = testRestTemplate
                 .postForEntity("/api/admin/users", createRequest, String.class);
@@ -80,12 +78,13 @@ public class UserAdminControllerTest extends IntegrationTestBase {
 
     @Test
     void pingEndpoint() {
-        var response = testRestTemplate
-                .withBasicAuth("admin", "admin")
-                .getForEntity("/api/admin/users/ping", String.class);
+        var pingEntity = getAuth();
 
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody()).isEqualTo("pong");
+        var pingResponse = testRestTemplate
+                .exchange("/api/admin/users/ping", HttpMethod.GET, pingEntity, String.class);
+
+        assertThat(pingResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(pingResponse.getBody()).isEqualTo("pong");
     }
 
     @Test
@@ -136,5 +135,21 @@ public class UserAdminControllerTest extends IntegrationTestBase {
         assertThat(profileResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(profileResponse.getBody()).isNotNull();
         assertThat(Objects.requireNonNull(profileResponse.getBody()).username()).isEqualTo("user");
+    }
+
+    private @NotNull HttpEntity<Object> getAuth() {
+        var loginRequest = new LoginRequest("admin", "admin");
+        var headersForLogin = new HttpHeaders();
+        headersForLogin.setContentType(MediaType.APPLICATION_JSON);
+        var loginEntity = new HttpEntity<>(loginRequest, headersForLogin);
+
+        var loginResponse = testRestTemplate
+                .postForEntity("/api/auth/login", loginEntity, JwtResponse.class);
+
+        var jwtToken = Objects.requireNonNull(loginResponse.getBody()).token();
+
+        var headersForPing = new HttpHeaders();
+        headersForPing.setBearerAuth(jwtToken);
+        return new HttpEntity<>(null, headersForPing);
     }
 }

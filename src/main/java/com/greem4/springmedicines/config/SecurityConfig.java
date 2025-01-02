@@ -42,7 +42,6 @@ public class SecurityConfig {
                 .cors(AbstractHttpConfigurer::disable)
 
                 .authorizeHttpRequests(auth -> auth
-                        // Swagger (публично)
                         .requestMatchers(
                                 "/v3/api-docs/**",
                                 "/api-docs/**",
@@ -62,9 +61,10 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth2 -> oauth2
-                        .userInfoEndpoint(userInfo -> userInfo.userService(oAuth2UserService()))
+                        .userInfoEndpoint(userInfo -> userInfo.userService(oAuth2Yandex()))
                         .successHandler(oAuth2SuccessHandler())
                         .failureHandler((req, res, ex) -> {
+                            log.debug("Request: {}", req.getRequestURI());
                             log.debug("OAuth2 login failed: {}", ex.getMessage());
                             res.sendRedirect("/?oauth2=error");
                         })
@@ -91,6 +91,7 @@ public class SecurityConfig {
     public AuthenticationSuccessHandler oAuth2SuccessHandler() {
         return (request, response, authentication) -> {
             var principal = authentication.getPrincipal();
+            log.debug("Registered user: {}", request);
             log.debug("OAuth2SuccessHandler invoked. Principal type: {}", principal.getClass().getName());
 
             String usernameOrEmail;
@@ -121,7 +122,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public OAuth2UserService<OAuth2UserRequest, OAuth2User> oAuth2UserService() {
+    public OAuth2UserService<OAuth2UserRequest, OAuth2User> oAuth2Yandex() {
         DefaultOAuth2UserService delegate = new DefaultOAuth2UserService();
 
         return userRequest -> {
