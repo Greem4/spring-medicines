@@ -1,12 +1,12 @@
 package com.greem4.springmedicines.http.controller;
 
+import com.greem4.springmedicines.dto.PagedResponse;
 import com.greem4.springmedicines.dto.UserCreatedRequest;
 import com.greem4.springmedicines.dto.UserResponse;
 import com.greem4.springmedicines.dto.UserRoleUpdateRequest;
 import com.greem4.springmedicines.service.UserRoleService;
 import com.greem4.springmedicines.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,11 +30,20 @@ public class UserAdminController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public Page<UserResponse> getAllUsers(
+    public PagedResponse<UserResponse> getAllUsers(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
-        return userService.getAllUsers(org.springframework.data.domain.PageRequest.of(page, size));
+        var pageable = org.springframework.data.domain.PageRequest.of(page, size);
+        var userPage = userService.getAllUsers(pageable);
+
+        return new PagedResponse<>(
+                userPage.getContent(),
+                userPage.getNumber(),
+                userPage.getSize(),
+                userPage.getTotalElements(),
+                userPage.getTotalPages()
+        );
     }
 
     @GetMapping("/{username}")

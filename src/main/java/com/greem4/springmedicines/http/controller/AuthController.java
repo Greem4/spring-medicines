@@ -1,23 +1,19 @@
 package com.greem4.springmedicines.http.controller;
 
-import com.greem4.springmedicines.dto.JwtResponse;
-import com.greem4.springmedicines.dto.LoginRequest;
-import com.greem4.springmedicines.dto.RegisterRequest;
-import com.greem4.springmedicines.dto.UserResponse;
+import com.greem4.springmedicines.dto.*;
 import com.greem4.springmedicines.security.CustomUserDetails;
-import com.greem4.springmedicines.security.JwtUtils;
 import com.greem4.springmedicines.service.UserService;
+import com.greem4.springmedicines.util.security.JwtUtils;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.*;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
@@ -34,23 +30,33 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<JwtResponse> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
-        var authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginRequest.username(), loginRequest.password())
+    public ResponseEntity<JwtResponse> authenticateUser(
+            @RequestBody @Valid LoginRequest loginRequest
+    ) {
+        log.debug("Attempting to authenticate user: {}", loginRequest.username());
+
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        loginRequest.username(),
+                        loginRequest.password()
+                )
         );
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        var jwt = jwtUtils.generateJwtToken(authentication);
+
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        String jwt = jwtUtils.generateJwtToken(userDetails.getUsername());
+        log.debug("Generated JWT for user {}: {}", userDetails.getAuthorities(), jwt);
 
         var jwtResponse = new JwtResponse(
                 jwt,
                 "Bearer",
+                3600,
+                "read write",
                 userDetails.getId(),
                 userDetails.getUsername(),
                 userDetails.getRole()
         );
-
         return ResponseEntity.ok(jwtResponse);
     }
 

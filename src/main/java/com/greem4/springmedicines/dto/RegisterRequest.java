@@ -8,6 +8,6 @@ public record RegisterRequest(
         @NotBlank String password
 ) {
     public UserCreatedRequest toUserCreatedRequest() {
-        return new UserCreatedRequest(username, password, Role.USER, true);
+        return new UserCreatedRequest(username, password, Role.USER,true, "local", null);
     }
 }
