@@ -33,23 +33,19 @@ public class JwtAuthenticationFilter extends GenericFilter {
 
         log.debug("Processing request: {}", httpRequest.getRequestURI());
 
-        // 1. Извлекаем заголовок Authorization
         String authHeader = httpRequest.getHeader("Authorization");
         log.debug("Authorization header: {}", authHeader);
 
-        // 2. Если нет заголовка или не начинается с Bearer — пропускаем дальше
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             log.debug("Authorization header is missing or does not start with 'Bearer '. Skipping JWT processing.");
             chain.doFilter(request, response);
             return;
         }
 
-        // 3. Извлекаем сам токен (обрезаем "Bearer ")
         String token = authHeader.substring(7);
         log.debug("Extracted JWT token: {}", token);
 
         try {
-            // 4. Валидируем токен
             boolean isValid = jwtUtils.validateJwtToken(token);
             if (!isValid) {
                 log.warn("Invalid JWT token: {}", token);
@@ -58,16 +54,13 @@ public class JwtAuthenticationFilter extends GenericFilter {
             }
             log.debug("JWT token is valid.");
 
-            // 5. Если токен валиден — получаем username
             String username = jwtUtils.getUsernameFromJwtToken(token);
             log.debug("Extracted username from token: {}", username);
 
             if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                // 6. Загружаем пользователя
                 var userDetails = userDetailsService.loadUserByUsername(username);
                 log.debug("Loaded user details for username: {}", username);
 
-                // 7. Создаём объект Authentication
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                         userDetails,
                         null,
@@ -77,7 +70,6 @@ public class JwtAuthenticationFilter extends GenericFilter {
                         new WebAuthenticationDetailsSource().buildDetails(httpRequest)
                 );
 
-                // 8. Кладём в SecurityContext
                 SecurityContextHolder.getContext().setAuthentication(authToken);
                 log.debug("Authentication object created and set in SecurityContext for username: {}", username);
             }
@@ -87,7 +79,6 @@ public class JwtAuthenticationFilter extends GenericFilter {
             return;
         }
 
-        // 9. Двигаемся дальше по фильтрам
         log.debug("Proceeding with the filter chain.");
         chain.doFilter(request, response);
     }

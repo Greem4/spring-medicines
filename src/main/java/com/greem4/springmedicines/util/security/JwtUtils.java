@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
+import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
 
@@ -21,7 +22,7 @@ public class JwtUtils {
 
     public JwtUtils(@Value("${jwt.secret}") String jwtSecret,
                     @Value("${jwt.expirationMs}") long jwtExpirationInMs) {
-        this.key = Keys.hmacShaKeyFor(jwtSecret.getBytes());
+        this.key = Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
         this.jwtExpirationMs = jwtExpirationInMs;
     }
 
@@ -35,27 +36,26 @@ public class JwtUtils {
     }
 
     public String getUsernameFromJwtToken(String token) {
-        return Jwts.parser().verifyWith((SecretKey) key).build()
-                .parseSignedClaims(token).getPayload().getSubject();
+        return Jwts.parser().
+                verifyWith((SecretKey) key).
+                build().
+                parseSignedClaims(token).
+                getPayload().
+                getSubject();
     }
 
     public boolean validateJwtToken(String authToken) {
         try {
             Jwts.parser()
                     .verifyWith((SecretKey) key)
+                    .clockSkewSeconds(60) // Можно сделать конфигурируемым
                     .build()
                     .parseSignedClaims(authToken);
             return true;
-        } catch (SecurityException e) {
-            System.err.println("Invalid JWT signature: " + e.getMessage());
-        } catch (MalformedJwtException e) {
-            System.err.println("Invalid JWT token: " + e.getMessage());
-        } catch (ExpiredJwtException e) {
-            System.err.println("JWT token is expired: " + e.getMessage());
-        } catch (UnsupportedJwtException e) {
-            System.err.println("JWT token is unsupported: " + e.getMessage());
-        } catch (IllegalArgumentException e) {
-            System.err.println("JWT claims string is empty: " + e.getMessage());
+        } catch (JwtException e) {
+            log.error("JWT validation failed: {}", e.getMessage());
+        } catch (Exception e) {
+            log.error("Unexpected error during JWT validation: {}", e.getMessage());
         }
         return false;
     }

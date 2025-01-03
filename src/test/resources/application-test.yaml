@@ -1,6 +1,6 @@
 jwt:
-  secret: "aVerySecureAndLongSecretKeyForJWTAuthentication123!"
-  expirationMs: 60000
+  secret: aVeryS+cureAndLongSecr-tKeyForJWTAuthentica=
+  expirationMs: 3600000
 
 app:
   mail:
@@ -30,4 +30,5 @@ logging:
   level:
     org.testcontainers: DEBUG
     org.hibernate.SQL: DEBUG
+    com.greem4.springmedicines.util.security.JwtUtils: debug
     org.hibernate.type.descriptor.sql.BasicBinder: TRACE
