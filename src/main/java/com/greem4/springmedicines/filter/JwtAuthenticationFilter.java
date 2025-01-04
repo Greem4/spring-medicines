@@ -17,6 +17,9 @@ import java.io.IOException;
 @Slf4j
 @Component
 @RequiredArgsConstructor
+// fixme: спринг дает свой механизм для секьюрити фильтров. Вкорячивать в него
+//  чисто сервлетные истории можно, но чаще не нужно. Конкретно под валидацию jwt вообще вполне может
+//  быть решение/интерфейс из коробки, но сходу не вспомню
 public class JwtAuthenticationFilter extends GenericFilter {
 
     private final JwtUtils jwtUtils;

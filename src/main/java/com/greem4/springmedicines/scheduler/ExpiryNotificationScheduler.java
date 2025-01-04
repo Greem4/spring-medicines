@@ -28,6 +28,7 @@ public class ExpiryNotificationScheduler {
     public void notifyMedicineExpiringSoon() {
         LocalDate limitDate = LocalDate.now().plusWeeks(1);
 
+        // fixme: а если там миллиард айтемов?) мб лучше пагинацию прикрутить?)
         List<MedicineExpiryNotificationDTO> expiringList = medicineRepository.findAllExpiringBefore(limitDate);
 
         if (expiringList.isEmpty()) {
@@ -47,6 +48,7 @@ public class ExpiryNotificationScheduler {
 
     private String buildNotificationBody(List<MedicineExpiryNotificationDTO> dtos) {
         StringBuilder sb = new StringBuilder();
+        // fixme: у тебя же таймлиф есть
         sb.append("<html><body>");
 
         sb.append("<h2 style=\"color:#333333;\">Срок годности истекает через неделю:</h2>");

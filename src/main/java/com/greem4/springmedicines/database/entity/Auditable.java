@@ -1,4 +1,5 @@
 package com.greem4.springmedicines.database.entity;
+// fixme: полагаю, отдельного слоя моделей домена у тебя нет. Точно ли логично тогда относить Entity-классы к database?
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;

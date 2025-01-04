@@ -10,8 +10,10 @@ import java.time.LocalDate;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+// fixme: и билдер, и сеттер - странная практика. Тут или крестик, или штаны
 @Builder
 @Entity
+// fixme: таблицы обычно в ед.ч. именуют
 @Table(name = "medicines")
 public class Medicine extends Auditable {
 
@@ -21,10 +23,12 @@ public class Medicine extends Auditable {
 
     private String name;
 
+    // fixme: не помню уникального индекса в миграциях под это
     @Column(name = "serial_number", unique = true, nullable = false)
     private String serialNumber;
 
     @Column(name = "expiration_date")
+    // fixme: зачем?
     @DateTimeFormat(pattern = "dd-MM-yyyy")
     private LocalDate expirationDate;
 

@@ -3,7 +3,9 @@ plugins {
     id 'org.springframework.boot' version '3.4.0'
     id 'io.spring.dependency-management' version '1.1.6'
     id 'jacoco'
+    id 'checkstyle'
 }
+
 apply from: 'version.gradle'
 
 group = 'com.greem4'
@@ -11,7 +13,7 @@ version = '0.2.0-SNAPSHOT'
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(23)
+        languageVersion = JavaLanguageVersion.of(21)
     }
 }
 
@@ -26,9 +28,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter'
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter-aop'
     implementation 'org.springframework.boot:spring-boot-starter-mail'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-hateoas'
@@ -37,15 +37,12 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
     implementation 'org.springframework.security:spring-security-oauth2-jose'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
-    implementation 'org.apache.tomcat.embed:tomcat-embed-jasper'
     implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:${versions.springdoc}"
     implementation 'jakarta.persistence:jakarta.persistence-api'
-
     implementation "io.jsonwebtoken:jjwt-api:${versions.jjwt}"
-    implementation 'jakarta.validation:jakarta.validation-api'
-    implementation 'org.hibernate.validator:hibernate-validator'
-    implementation 'org.liquibase:liquibase-core'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
 
+    implementation 'org.liquibase:liquibase-core'
 
     annotationProcessor 'org.projectlombok:lombok'
 
@@ -74,6 +71,7 @@ dependencies {
 
 test {
     useJUnitPlatform()
+    dependsOn checkstyleMain, checkstyleTest
     jvmArgs += [
             "-XX:+EnableDynamicAgentLoading",
             "-Djdk.instrument.traceUsage=false",
@@ -92,5 +90,10 @@ jacocoTestReport {
 }
 
 wrapper {
-    gradleVersion '8.10'
+    gradleVersion '8.5'
+}
+
+checkstyle {
+    toolVersion = '10.21.1'
+    configFile = file('config/checkstyle/checkstyle.xml')
 }

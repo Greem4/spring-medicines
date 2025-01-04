@@ -27,12 +27,16 @@ public class MedicineService {
 
     private final MedicineRepository medicineRepository;
 
+    // fixme: завтра нужно будет использовать этот же метод для другого сервиса или для другого способа внешней
+    //  коммуникации. А сервис только rest-дтошку умеет отдавать. Нехорошо как-то.
+    //  Да и должен ли вообще сервисный слой про рест-дтошки знать?)
     public Page<MedicineView> getAllMedicines(Pageable pageable) {
         if (!pageable.getSort().isSorted()) {
             pageable = PageRequest.of(
                     pageable.getPageNumber(),
                     pageable.getPageSize(),
                     Sort.by(
+                            // fixme: не самое очевидное поведение. Да и зачем?
                             Sort.Order.asc("name"),
                             Sort.Order.desc("expirationDate"),
                             Sort.Order.desc("serialNumber")
@@ -77,6 +81,7 @@ public class MedicineService {
         medicineRepository.delete(existingMedicine);
     }
 
+    // fixme: не похоже на ответственность сервиса
     private String formatDate(LocalDate localDate) {
         DateTimeFormatter format = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         return localDate.format(format);
@@ -87,7 +92,7 @@ public class MedicineService {
         Period period = Period.between(today, expirationDate);
         int daysLeft = period.getDays() + period.getMonths() * 30 + period.getYears() * 365;
 
-        if (daysLeft > 90) return "green";
+        if (daysLeft > 90) return "green";// fixme: фуфуфу. {}?
         if (daysLeft > 30) return "orange";
         return "red";
     }
@@ -97,6 +102,7 @@ public class MedicineService {
                 medicine.getId(),
                 medicine.getName(),
                 medicine.getSerialNumber(),
+                // fixme: зачем в строку форматировать?)
                 formatDate(medicine.getExpirationDate()),
                 determineColor(medicine.getExpirationDate())
         );

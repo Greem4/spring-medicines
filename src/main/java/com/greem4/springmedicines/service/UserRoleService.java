@@ -14,6 +14,7 @@ public class UserRoleService {
 
     private final UserRepository userRepository;
 
+    // fixme: транзакция?
     public User updateUserRole(UserRoleUpdateRequest request) {
         var user = userRepository.findByUsername(request.username())
                 .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден"));

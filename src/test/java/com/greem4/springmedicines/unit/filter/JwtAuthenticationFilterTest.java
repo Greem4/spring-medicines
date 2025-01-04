@@ -8,6 +8,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
+// fixme: наследование в юнит-тестах - такое себе. Бывает иногда (и чаще является примером плохого дизайна),
+//  но точно не в формате общего суперкласса у всех, как это часто случается в интеграционных тестах
 class JwtAuthenticationFilterTest extends UnitTestBase {
 
     @Test

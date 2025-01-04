@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDate;
 import java.util.List;
 
+// fixme: зачем анноташка?:)
 @Repository
 public interface MedicineRepository extends JpaRepository<Medicine, Long> {
 

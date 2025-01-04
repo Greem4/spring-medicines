@@ -72,6 +72,8 @@ public class AuthControllerTest extends IntegrationTestBase {
                         new HttpEntity<>(loginRequest, getHttpHeaders()),
                         String.class);
 
+//        fixme: стандартные ассерты аля assertEquals() более читабельны. Использовать
+//         assertThat без явной необходимости как будто избыточно
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
         assertThat(response.getBody()).isEqualTo("Неверные имя пользователя или пароль");
     }

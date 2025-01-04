@@ -1,4 +1,5 @@
 databaseChangeLog:
+# fixme: зачем несколько ченджлогов?)
   - include:
       file: db/changelog/db.changelog-1.0.sql
   - include:

@@ -7,33 +7,12 @@ jwt:
   secret: ${JWT_SECRET}
   expirationMs: ${JWT_EXPIRATION_MS}
 
-logging:
-  pattern:
-    dateformat: dd-MM-yyyy 'T' HH:mm:ss
-  level:
-    root: info
-    com.greem4.springmedicines: info
-    com.greem4.springmedicines.util.aspect: info
-    com.zaxxer.hikari: info
-    org.hibernate: info
-    org.springframework.security: debug
-    org.hibernate.orm.connections.pooling: OFF
-  file:
-    name: ./logs/loggingFile.log
-
 spring:
   datasource:
     url: ${DB_URL}
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
-    hikari:
-      minimum-idle: 2
-      maximum-pool-size: 10
-      idle-timeout: 30000
-      pool-name: HikariPool-1
-      max-lifetime: 1800000
-      connection-timeout: 30000
 
   liquibase:
     change-log: classpath:/db/changelog/db.changelog-master.yaml
@@ -41,10 +20,12 @@ spring:
   jpa:
     properties:
         hibernate:
+#          fixme: зачем?
           show_sql: true
           format_sql: true
           database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
+#      fixme: отписал в тестовом конфиге
       ddl-auto: update
     open-in-view: false
 
@@ -108,3 +89,6 @@ springdoc:
     operations-sorter: method
     tags-sorter: alpha
     display-request-duration: true
+
+logging:
+  config: classpath:logback-spring.xml

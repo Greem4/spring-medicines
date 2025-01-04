@@ -43,7 +43,8 @@ public class LoggingAspect {
             Object result = joinPoint.proceed();
             Instant end = Instant.now();
             long elapsedSeconds = Duration.between(start, end).toSeconds();
-
+// fixme: уровень логирования неудачный выбрал. при минимальной нагрузке на апликуху засрешь логи
+//  бесполезной информацией
             log.info("[THREAD: {}] Completed method call: {}.{} in {} seconds. Result: {}",
                     threadName, className, methodName, elapsedSeconds, result);
 

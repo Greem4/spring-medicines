@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @Slf4j
 @RestControllerAdvice
+// fixme: мухи (хэндлер) отдельно, котлета (классы эксепшнов) отдельно в структуре пакетов
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(ResourceNotFoundException.class)
@@ -51,6 +52,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleBadCredentials(BadCredentialsException ex) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Неверные имя пользователя или пароль");
     }
+
+    // fixme: правильно понимаю, что если проект разрастется еще сущностей на 10-15 - число кастомных исключений
+    //  вырастет штук до 50?) Кто их все будет помнить и корректно использовать?:)
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleGeneralException(Exception ex) {

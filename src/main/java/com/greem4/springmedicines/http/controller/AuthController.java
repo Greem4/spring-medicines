@@ -1,6 +1,9 @@
 package com.greem4.springmedicines.http.controller;
 
-import com.greem4.springmedicines.dto.*;
+import com.greem4.springmedicines.dto.JwtResponse;
+import com.greem4.springmedicines.dto.LoginRequest;
+import com.greem4.springmedicines.dto.RegisterRequest;
+import com.greem4.springmedicines.dto.UserResponse;
 import com.greem4.springmedicines.security.CustomUserDetails;
 import com.greem4.springmedicines.service.UserService;
 import com.greem4.springmedicines.util.security.JwtUtils;
@@ -8,13 +11,20 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.*;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
+@SuppressWarnings("checkstyle:RegexpMultiline")
 @Slf4j
 @RestController
+// fixme: если стремимся к REST API - как минимум не хватает версионирования в пути.
+//  А заодно еще и разделения на публичный/приватный АПИ, опционально
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
 public class AuthController {
@@ -42,6 +52,7 @@ public class AuthController {
                 )
         );
 
+        // fixme: это вполне умеют делать секьюрити фильтры:) вовсе не обязательно вручную сетать секьюрити контекст
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
@@ -62,6 +73,7 @@ public class AuthController {
 
     @PostMapping("/logout")
     public ResponseEntity<String> logout() {
+// fixme: а как же глобал логаут?)
         return ResponseEntity.ok("Logout successful");
     }
 }

@@ -14,6 +14,7 @@ public record MedicineCreateRequest(
         String serialNumber,
 
         @NotNull(message = "Дата истечения срока годности не может быть пустой")
+        // fixme: зачем?)
         @DateTimeFormat(pattern = "dd-MM-yyyy")
         LocalDate expirationDate
 ) {

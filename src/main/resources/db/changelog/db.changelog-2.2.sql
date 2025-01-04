@@ -2,6 +2,7 @@
 
 
 --changeset Greem4:1
+-- fixme: любая миграция по умолчанию применяется транзакционно
 BEGIN;
 
 DELETE FROM users

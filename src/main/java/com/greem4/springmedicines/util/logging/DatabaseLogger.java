@@ -15,7 +15,8 @@ import java.sql.DatabaseMetaData;
 public class DatabaseLogger {
 
     private final DataSource dataSource;
-
+    // fixme: кажется, и то, и другое логируют сами либы, мб надо в настройках
+    //  логеров поковыряться, чтобы этк инфу выводить (только хз зачем). выглядит как костыль
     public void logDatabaseInfo() {
         try (Connection connection = dataSource.getConnection()) {
             DatabaseMetaData metaData = connection.getMetaData();

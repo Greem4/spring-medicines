@@ -30,6 +30,8 @@ public class MedicineSecurityTest extends IntegrationTestBase {
         var response = testRestTemplate.
                 getForEntity("/api/medicines/1",
                         MedicineView.class);
+
+// fixme: в чем смысл теста? Ты-то знаешь, что он в этой ситуации должен вернуть
         assertThat(response.getStatusCode()).isIn(HttpStatus.OK, HttpStatus.NOT_FOUND);
     }
 

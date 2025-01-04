@@ -23,6 +23,7 @@ public class UserAdminController {
     @ResponseStatus(HttpStatus.CREATED)
     public UserResponse createUser(@RequestBody UserCreatedRequest request) {
         if (userService.existsByUsername(request.username())) {
+            // fixme: миллион кастомных исключений и RuntimeException для стандартной бизнесовой ситуации - это странно
             throw new RuntimeException("Пользователь с таким именем уже существует");
         }
         return userService.createUser(request);
@@ -31,6 +32,7 @@ public class UserAdminController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public PagedResponse<UserResponse> getAllUsers(
+            // fixme: @PageableDefault?
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
@@ -70,6 +72,7 @@ public class UserAdminController {
         return ResponseEntity.ok(update);
     }
 
+    // fixme: зачем?
     @GetMapping("/ping")
     @ResponseStatus(HttpStatus.OK)
     public String ping() {

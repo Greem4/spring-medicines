@@ -26,6 +26,8 @@ public class User {
     @Column(nullable = false)
     private Role role;
 
+    // fixme: пустая аннотация @Column не имеет смысла. Любое поле энтити-класса трактуется как колонка,
+    //  если не указано иное (если не должно быть колонкой - поле должно быть аннотировано @Transient)
     @Column
     private String provider;
 

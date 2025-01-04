@@ -44,6 +44,7 @@ class JwtUtilsTest extends IntegrationTestBase {
 
         var invalidToken = "invalid.token.value";
         var isInvalid = jwtUtils.validateJwtToken(invalidToken);
+// fixme: плохая практика. Если тестишь несколько сценариев - это должно быть несколько @Test-методов
         assertThat(isInvalid).isFalse();
 
         String expiredToken = Jwts.builder()

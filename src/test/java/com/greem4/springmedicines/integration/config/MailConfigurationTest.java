@@ -14,6 +14,7 @@ public class MailConfigurationTest extends IntegrationTestBase {
     private Environment env;
 
     @Test
+        // fixme: в чем смысл этого теста? Тестишь сам спринг?)
     void mailPropertiesTest() {
         String host = env.getProperty("spring.mail.host");
         int port = Integer.parseInt(Objects.requireNonNull(env.getProperty("spring.mail.port")));

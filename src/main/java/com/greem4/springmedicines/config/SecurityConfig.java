@@ -89,6 +89,7 @@ public class SecurityConfig {
 
     @Bean
     public AuthenticationSuccessHandler oAuth2SuccessHandler() {
+        // fixme: декомпозиция хромает
         return (request, response, authentication) -> {
             var principal = authentication.getPrincipal();
             log.debug("Registered user: {}", request);

@@ -18,6 +18,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 public abstract class UnitTestBase {
 
     @Mock
+    // fixme: Утилиты - на то и утилиты, чтобы представляться классами со статик-методами, а не спринг-компонентами
     protected JwtUtils jwtUtils;
     @Mock
     protected CustomUserDetailsService userDetailsService;

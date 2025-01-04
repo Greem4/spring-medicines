@@ -18,6 +18,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден: " + username));
 
+// fixme:  Optional#map()?
         return new CustomUserDetails(user);
     }
 }

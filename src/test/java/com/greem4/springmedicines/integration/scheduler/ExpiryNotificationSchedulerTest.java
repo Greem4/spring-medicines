@@ -104,6 +104,7 @@ public class ExpiryNotificationSchedulerTest extends IntegrationTestBase {
     private String extractContentRecursively(Object content) throws Exception {
         if (content instanceof String text) {
             return text;
+            // fixme: у тебя в if гарантирован return. Зачем дальше использовать else if вместо обычного if?
         } else if (content instanceof Multipart multipart) {
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < multipart.getCount(); i++) {
