@@ -20,18 +20,7 @@ spring:
 
   jpa:
     hibernate:
-#      fixme: генерация ddl может быть в формате валидации для тестов.
-#       Генерить БД хибернейт не должен. Для сорсов (еще не смотрел) этот прааметр должен быть выключен вообще
       ddl-auto: update
-    show-sql: true
 
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.yaml
-
-logging:
-  level:
-#    fixme: уже писал про отдельный конфиг-файл под логгер
-    org.testcontainers: DEBUG
-    org.hibernate.SQL: DEBUG
-    com.greem4.springmedicines.util.security.JwtUtils: debug
-    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
