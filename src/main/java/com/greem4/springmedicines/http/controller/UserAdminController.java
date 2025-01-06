@@ -1,11 +1,7 @@
 package com.greem4.springmedicines.http.controller;
 
-import com.greem4.springmedicines.database.entity.User;
-import com.greem4.springmedicines.dto.PagedResponse;
-import com.greem4.springmedicines.dto.UserCreatedRequest;
 import com.greem4.springmedicines.dto.UserResponse;
 import com.greem4.springmedicines.dto.UserRoleUpdateRequest;
-import com.greem4.springmedicines.exception.UserAlreadyExistsException;
 import com.greem4.springmedicines.mapper.UserMapper;
 import com.greem4.springmedicines.service.UserRoleService;
 import com.greem4.springmedicines.service.UserService;
@@ -17,25 +13,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.stream.Stream;
-
 @RestController
-@RequestMapping("/api/admin/users")
+@RequestMapping("/api/v1/admin/users")
 @RequiredArgsConstructor
 public class UserAdminController {
 
     private final UserRoleService userRoleService;
     private final UserService userService;
     private final UserMapper userMapper;
-
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public UserResponse createUser(@RequestBody UserCreatedRequest request) {
-        if (userService.existsByUsername(request.username())) {
-            throw new UserAlreadyExistsException("Пользователь с таким именем уже существует");
-        }
-        return userService.createUser(request);
-    }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)

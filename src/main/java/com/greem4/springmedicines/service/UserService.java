@@ -4,6 +4,7 @@ import com.greem4.springmedicines.database.entity.Role;
 import com.greem4.springmedicines.database.entity.User;
 import com.greem4.springmedicines.database.repository.UserRepository;
 import com.greem4.springmedicines.dto.ChangePasswordRequest;
+import com.greem4.springmedicines.dto.RegisterRequest;
 import com.greem4.springmedicines.dto.UserCreatedRequest;
 import com.greem4.springmedicines.dto.UserResponse;
 import com.greem4.springmedicines.exception.*;
@@ -33,7 +34,7 @@ public class UserService {
     }
 
     @Transactional
-    public UserResponse createUser(UserCreatedRequest request) {
+    public UserResponse createUser(RegisterRequest request) {
         if (userRepository.existsByUsername(request.username())) {
             throw new UserAlreadyExistsException("Пользователь с таким именем уже существует");
         }

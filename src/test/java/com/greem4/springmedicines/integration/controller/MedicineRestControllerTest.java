@@ -35,7 +35,7 @@ class MedicineRestControllerTest extends IntegrationTestBase {
         }
 
         ResponseEntity<PagedModel<EntityModel<MedicineView>>> response = testRestTemplate
-                .exchange("/api/medicines",
+                .exchange("/api/v1/medicines",
                         HttpMethod.GET,
                         null,
                         new ParameterizedTypeReference<>() {
@@ -57,10 +57,10 @@ class MedicineRestControllerTest extends IntegrationTestBase {
         createMedicine(request);
 
         var response = testRestTemplate
-                .getForEntity("/api/medicines/2",
+                .getForEntity("/api/v1/medicines/2",
                         MedicineView.class);
 
-        assertThat(testRestTemplate.getForEntity("/api/medicines/2", MedicineView.class).getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(testRestTemplate.getForEntity("/api/v1/medicines/2", MedicineView.class).getStatusCode()).isEqualTo(HttpStatus.OK);
         var medicine = response.getBody();
         assertThat(medicine).isNotNull();
         assertThat(medicine.name()).isEqualTo("Аспирин");
@@ -85,7 +85,7 @@ class MedicineRestControllerTest extends IntegrationTestBase {
         var request = new MedicineUpdateRequest("Новый аспирин", "5000", LocalDate.now().plusWeeks(2));
 
         var response = testRestTemplate
-                .exchange("/api/medicines/1",
+                .exchange("/api/v1/medicines/1",
                         HttpMethod.PUT,
                         getHttpEntity(request),
                         MedicineView.class);
@@ -102,19 +102,19 @@ class MedicineRestControllerTest extends IntegrationTestBase {
     @Test
     void deleteMedicine() {
         var response = testRestTemplate
-                .exchange("/api/medicines/1",
+                .exchange("/api/v1/medicines/1",
                         HttpMethod.DELETE,
                         getAuth("admin", "admin"),
                         Void.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
 
-        var notFoundResponse = testRestTemplate.getForEntity("/api/medicines/1", String.class);
+        var notFoundResponse = testRestTemplate.getForEntity("/api/v1/medicines/1", String.class);
         assertThat(notFoundResponse.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 
     @Test
     void getMedicineByIdNotFound() {
-        var response = testRestTemplate.getForEntity("/api/medicines/999", String.class);
+        var response = testRestTemplate.getForEntity("/api/v1/medicines/999", String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 
@@ -123,7 +123,7 @@ class MedicineRestControllerTest extends IntegrationTestBase {
         var updateRequest = new MedicineUpdateRequest("Новый аспирин", "9999", LocalDate.now().plusMonths(1));
 
         var response = testRestTemplate
-                .exchange("/api/medicines/999",
+                .exchange("/api/v1/medicines/999",
                         HttpMethod.PUT,
                         getHttpEntity(updateRequest),
                         String.class);
@@ -134,7 +134,7 @@ class MedicineRestControllerTest extends IntegrationTestBase {
     @Test
     void deleteMedicineNotFound() {
         var response = testRestTemplate
-                .exchange("/api/medicines/999",
+                .exchange("/api/v1/medicines/999",
                         HttpMethod.DELETE,
                         getAuth("admin", "admin"),
                         String.class);
@@ -148,7 +148,7 @@ class MedicineRestControllerTest extends IntegrationTestBase {
 
     private ResponseEntity<MedicineView> createMedicine(MedicineCreateRequest request) {
         return testRestTemplate
-                .exchange("/api/medicines",
+                .exchange("/api/v1/medicines",
                         HttpMethod.POST,
                         new HttpEntity<>(request, getHeadersAdmin()),
                         MedicineView.class);

@@ -18,11 +18,11 @@ public class AuthControllerTest extends IntegrationTestBase {
         var registerRequest = new RegisterRequest("testUser", "password123");
 
         var response = testRestTemplate.
-                postForEntity("/api/auth/register",
+                postForEntity("/api/v1/auth/register",
                         new HttpEntity<>(registerRequest, getHttpHeaders()),
                         UserResponse.class);
 
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         var userResponse = response.getBody();
         assertThat(userResponse).isNotNull();
         assertThat(userResponse.username()).isEqualTo("testUser");
@@ -38,10 +38,10 @@ public class AuthControllerTest extends IntegrationTestBase {
         var firstRequest = new HttpEntity<>(firstRegister, getHttpHeaders());
         var secondRequest = new HttpEntity<>(secondRegister, getHttpHeaders());
 
-        var firstResponse = testRestTemplate.postForEntity("/api/auth/register", firstRequest, UserResponse.class);
-        var secondResponse = testRestTemplate.postForEntity("/api/auth/register", secondRequest, String.class);
+        var firstResponse = testRestTemplate.postForEntity("/api/v1/auth/register", firstRequest, UserResponse.class);
+        var secondResponse = testRestTemplate.postForEntity("/api/v1/auth/register", secondRequest, String.class);
 
-        assertThat(firstResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(firstResponse.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         assertThat(secondResponse.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
         assertThat(secondResponse.getBody()).isEqualTo("Пользователь с таким именем уже существует");
     }
@@ -51,7 +51,7 @@ public class AuthControllerTest extends IntegrationTestBase {
         var loginRequest = new LoginRequest("user", "user");
 
         var response = testRestTemplate
-                .postForEntity("/api/auth/login",
+                .postForEntity("/api/v1/auth/login",
                         new HttpEntity<>(loginRequest, getHttpHeaders()),
                         JwtResponse.class);
 
@@ -68,12 +68,10 @@ public class AuthControllerTest extends IntegrationTestBase {
         var loginRequest = new LoginRequest("user", "password");
 
         var response = testRestTemplate
-                .postForEntity("/api/auth/login",
+                .postForEntity("/api/v1/auth/login",
                         new HttpEntity<>(loginRequest, getHttpHeaders()),
                         String.class);
 
-//        fixme: стандартные ассерты аля assertEquals() более читабельны. Использовать
-//         assertThat без явной необходимости как будто избыточно
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
         assertThat(response.getBody()).isEqualTo("Неверные имя пользователя или пароль");
     }
@@ -81,7 +79,7 @@ public class AuthControllerTest extends IntegrationTestBase {
     @Test
     public void logoutTest() {
         var response = testRestTemplate
-                .postForEntity("/api/auth/logout",
+                .postForEntity("/api/v1/auth/logout",
                         new HttpEntity<>(getHttpHeaders()),
                         String.class);
 

@@ -17,7 +17,7 @@ public class MedicineSecurityTest extends IntegrationTestBase {
     @Test
     void getAllWithoutAuth() {
         var response = testRestTemplate
-                .exchange("/api/medicines",
+                .exchange("/api/v1/medicines",
                         HttpMethod.GET, null,
                         new ParameterizedTypeReference<>() {
                         });
@@ -28,7 +28,7 @@ public class MedicineSecurityTest extends IntegrationTestBase {
     @Test
     void getByIdWithoutAuth() {
         var response = testRestTemplate.
-                getForEntity("/api/medicines/1",
+                getForEntity("/api/v1/medicines/1",
                         MedicineView.class);
 
 // fixme: в чем смысл теста? Ты-то знаешь, что он в этой ситуации должен вернуть
@@ -39,7 +39,7 @@ public class MedicineSecurityTest extends IntegrationTestBase {
     void postWithoutAuth() {
         var request = new MedicineCreateRequest("TestMedicine", "1222", LocalDate.now().plusMonths(1));
         var response = testRestTemplate
-                .postForEntity("/api/medicines",
+                .postForEntity("/api/v1/medicines",
                         request,
                         String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
@@ -49,7 +49,7 @@ public class MedicineSecurityTest extends IntegrationTestBase {
     void postWithUserAuth() {
         var request = new MedicineCreateRequest("TestMedicine", "1222", LocalDate.now().plusMonths(1));
         var response = testRestTemplate
-                .exchange("/api/medicines",
+                .exchange("/api/v1/medicines",
                         HttpMethod.POST,
                         new HttpEntity<>(request, getHeadersUser()),
                         String.class);
@@ -61,7 +61,7 @@ public class MedicineSecurityTest extends IntegrationTestBase {
     void postWithAdminAuth() {
         var request = new MedicineCreateRequest("TestMedicine", "1222", LocalDate.now().plusMonths(4));
         var response = testRestTemplate
-                .postForEntity("/api/medicines",
+                .postForEntity("/api/v1/medicines",
                         new HttpEntity<>(request, getHeadersAdmin()),
                         String.class);
 
@@ -77,7 +77,7 @@ public class MedicineSecurityTest extends IntegrationTestBase {
                 "expirationDate", LocalDate.now().minusMonths(1).toString()
         );
         var response = testRestTemplate
-                .exchange("/api/medicines",
+                .exchange("/api/v1/medicines",
                         HttpMethod.PUT,
                         new HttpEntity<>(updateData, getHeadersUser()),
                         String.class);
@@ -97,7 +97,7 @@ public class MedicineSecurityTest extends IntegrationTestBase {
         headers.setContentType(MediaType.APPLICATION_JSON);
         var entity = new HttpEntity<>(updateData, headers);
         var response = testRestTemplate
-                .exchange("/api/medicines",
+                .exchange("/api/v1/medicines",
                         HttpMethod.PUT,
                         entity,
                         String.class);
@@ -108,7 +108,7 @@ public class MedicineSecurityTest extends IntegrationTestBase {
     @Test
     void deleteWithAdminAuthTest() {
         var response = testRestTemplate
-                .exchange("/api/medicines/1",
+                .exchange("/api/v1/medicines/1",
                         HttpMethod.DELETE,
                         getAuth("admin", "admin"),
                         String.class);
@@ -119,7 +119,7 @@ public class MedicineSecurityTest extends IntegrationTestBase {
     @Test
     void deleteWithUserAuthTest() {
         var response = testRestTemplate
-                .exchange("/api/medicines/1",
+                .exchange("/api/v1/medicines/1",
                         HttpMethod.DELETE,
                         getAuth("user", "user"),
                         String.class);
@@ -130,7 +130,7 @@ public class MedicineSecurityTest extends IntegrationTestBase {
     @Test
     void deleteWithNotAuthTest() {
         var response = testRestTemplate
-                .exchange("/api/medicines/1",
+                .exchange("/api/v1/medicines/1",
                         HttpMethod.DELETE,
                         null,
                         String.class);

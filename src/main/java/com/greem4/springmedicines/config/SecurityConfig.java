@@ -50,14 +50,14 @@ public class SecurityConfig {
                                 "/swagger-resources/**",
                                 "/webjars/**"
                         ).permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/auth/register").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/medicines/**").permitAll()
-                        .requestMatchers(HttpMethod.PUT, "/api/users/changePassword").authenticated()
-                        .requestMatchers(HttpMethod.POST, "/api/medicines").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "/api/medicines/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/api/medicines/**").hasRole("ADMIN")
-                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/v1/auth/register").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/v1/auth/login").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/medicines/**").permitAll()
+                        .requestMatchers(HttpMethod.PUT, "/api/v1/users/changePassword").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/api/v1/medicines").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/v1/medicines/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/v1/medicines/**").hasRole("ADMIN")
+                        .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth2 -> oauth2
@@ -70,7 +70,7 @@ public class SecurityConfig {
                         })
                 )
                 .logout(logout -> logout
-                        .logoutUrl("/api/auth/logout")
+                        .logoutUrl("/api/v1/auth/logout")
                         .logoutSuccessUrl("/")
                         .permitAll()
                 )
