@@ -1,6 +1,8 @@
 package com.greem4.springmedicines.integration.controller;
 
+import com.greem4.springmedicines.database.entity.Role;
 import com.greem4.springmedicines.dto.ChangePasswordRequest;
+import com.greem4.springmedicines.dto.UserCreatedRequest;
 import com.greem4.springmedicines.dto.UserResponse;
 import com.greem4.springmedicines.integration.config.IntegrationTestBase;
 import org.junit.jupiter.api.Test;
@@ -16,7 +18,7 @@ public class UserControllerTest extends IntegrationTestBase {
 
     @Test
     void changePasswordAnotherUser() {
-        var changePasswordRequest = new ChangePasswordRequest("user", "123456", "123456");
+        var changePasswordRequest = new ChangePasswordRequest("user", "user",  "123456", "123456");
 
         var response = testRestTemplate
                 .exchange("/api/users/changePassword",
@@ -24,7 +26,7 @@ public class UserControllerTest extends IntegrationTestBase {
                         new HttpEntity<>(changePasswordRequest, getHeadersUser()),
                         Void.class);
 
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
         var profileResponse = testRestTemplate
                 .exchange("/api/users/profile",

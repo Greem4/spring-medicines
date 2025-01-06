@@ -126,7 +126,7 @@ public class UserAdminControllerTest extends IntegrationTestBase {
 
     @Test
     void changePasswordUserAuth() {
-        var changePasswordRequest = new ChangePasswordRequest("user", "123456", "123456");
+        var changePasswordRequest = new ChangePasswordRequest("user", "user", "123456", "123456");
 
         var response = testRestTemplate
                 .exchange("/api/users/changePassword",
@@ -134,7 +134,7 @@ public class UserAdminControllerTest extends IntegrationTestBase {
                         new HttpEntity<>(changePasswordRequest, getHeadersUser()),
                         String.class);
 
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
         var profileResponse = testRestTemplate
                 .exchange("/api/users/profile",

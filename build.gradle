@@ -11,7 +11,8 @@ ext {
                 springdoc: '2.7.0',
                 jacoco   : '0.8.12',
                 greenmail: '2.1.2',
-                jjwt     : '0.12.6']
+                jjwt     : '0.12.6',
+                mapstruct: '1.6.3']
 }
 
 group = 'com.greem4'
@@ -47,6 +48,9 @@ dependencies {
     implementation 'jakarta.persistence:jakarta.persistence-api'
     implementation "io.jsonwebtoken:jjwt-api:${versions.jjwt}"
     implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+    implementation "org.mapstruct:mapstruct:${versions.mapstruct}"
+    annotationProcessor "org.mapstruct:mapstruct-processor:${versions.mapstruct}"
 
     implementation 'org.liquibase:liquibase-core'
 

@@ -147,12 +147,10 @@ class MedicineRestControllerTest extends IntegrationTestBase {
     }
 
     private ResponseEntity<MedicineView> createMedicine(MedicineCreateRequest request) {
-        var headers = getHeadersAdmin();
-        var requestHttpEntity = new HttpEntity<>(request, headers);
         return testRestTemplate
                 .exchange("/api/medicines",
                         HttpMethod.POST,
-                        requestHttpEntity,
+                        new HttpEntity<>(request, getHeadersAdmin()),
                         MedicineView.class);
     }
 }

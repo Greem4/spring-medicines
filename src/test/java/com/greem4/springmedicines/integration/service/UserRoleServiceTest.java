@@ -19,7 +19,7 @@ public class UserRoleServiceTest extends IntegrationTestBase {
     private UserRoleService userRoleService;
 
     @Test
-    void testUpdateUserRole() {
+    void updateUserRoleTest() {
         var user = userRepository.findByUsername("user").orElseThrow();
         assertThat(user.getRole()).isEqualTo(Role.USER);
 
@@ -31,7 +31,7 @@ public class UserRoleServiceTest extends IntegrationTestBase {
     }
 
     @Test
-    void testDisableUserRole() {
+    void disableUserRoleTest() {
         var user = userRepository.findByUsername("user").orElseThrow();
         assertThat(user.isEnabled()).isTrue();
 
@@ -42,7 +42,7 @@ public class UserRoleServiceTest extends IntegrationTestBase {
     }
 
     @Test
-    void testEnableUserRole() {
+    void enableUserRoleTest() {
         userRoleService.disableUser("user");
         var user = userRepository.findByUsername("user").orElseThrow();
         assertThat(user.isEnabled()).isFalse();

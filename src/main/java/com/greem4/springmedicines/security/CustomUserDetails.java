@@ -23,14 +23,6 @@ public class CustomUserDetails implements UserDetails {
         return user.getRole();
     }
 
-    public String getProvider() {
-        return user.getProvider();
-    }
-
-    public String getProviderId() {
-        return user.getProviderId();
-    }
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.singleton(new SimpleGrantedAuthority("ROLE_" + getRole()));
