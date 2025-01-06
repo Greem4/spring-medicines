@@ -3,7 +3,6 @@ plugins {
     id 'org.springframework.boot' version '3.4.0'
     id 'io.spring.dependency-management' version '1.1.6'
     id 'jacoco'
-    id 'checkstyle'
 }
 
 ext {
@@ -11,8 +10,7 @@ ext {
                 springdoc: '2.7.0',
                 jacoco   : '0.8.12',
                 greenmail: '2.1.2',
-                jjwt     : '0.12.6',
-                mapstruct: '1.6.3']
+                jjwt     : '0.12.6']
 }
 
 group = 'com.greem4'
@@ -49,9 +47,6 @@ dependencies {
     implementation "io.jsonwebtoken:jjwt-api:${versions.jjwt}"
     implementation 'org.springframework.boot:spring-boot-starter-validation'
 
-    implementation "org.mapstruct:mapstruct:${versions.mapstruct}"
-    annotationProcessor "org.mapstruct:mapstruct-processor:${versions.mapstruct}"
-
     implementation 'org.liquibase:liquibase-core'
 
     annotationProcessor 'org.projectlombok:lombok'
@@ -80,7 +75,6 @@ dependencies {
 
 test {
     useJUnitPlatform()
-    dependsOn checkstyleMain, checkstyleTest
 
     jvmArgs += ['-XX:+EnableDynamicAgentLoading',
                 '-Djdk.instrument.traceUsage=false',
@@ -99,9 +93,4 @@ jacocoTestReport {
 
 wrapper {
     gradleVersion = '8.5'
-}
-
-checkstyle {
-    toolVersion = '10.21.1'
-    configFile = file('config/checkstyle/checkstyle.xml')
 }

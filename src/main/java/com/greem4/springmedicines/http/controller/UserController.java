@@ -41,7 +41,6 @@ public class UserController {
         }
 
         userService.changePassword(request.username(), request);
-//        return ResponseEntity.ok("Пароль успешно изменен");
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok("Пароль успешно изменен");
     }
 }

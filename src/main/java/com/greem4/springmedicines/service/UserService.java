@@ -7,6 +7,7 @@ import com.greem4.springmedicines.dto.ChangePasswordRequest;
 import com.greem4.springmedicines.dto.UserCreatedRequest;
 import com.greem4.springmedicines.dto.UserResponse;
 import com.greem4.springmedicines.exception.*;
+import com.greem4.springmedicines.mapper.UserMapper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +26,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-//    private final UserMapper userMapper;
+    private final UserMapper userMapper;
 
     public Optional<User> findByProviderAndProviderId(String provider, String providerId) {
         return userRepository.findByProviderAndProviderId(provider, providerId);
@@ -41,9 +42,11 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(request.password()));
         user.setRole(Role.USER);
         user.setEnabled(true);
+        user.setProvider("local");
+        user.setProviderId(null);
 
-        var savedUser = userRepository.save(user);
-        return toUserResponse(savedUser);
+        var saveUser = userRepository.save(user);
+        return userMapper.toUserResponse(saveUser);
     }
 
     public boolean existsByUsername(String username) {
@@ -51,13 +54,13 @@ public class UserService {
     }
 
     public Page<UserResponse> getAllUsers(Pageable pageable) {
-        return userRepository.findAll(pageable).map(this::toUserResponse);
+        return userRepository.findAll(pageable).map(userMapper::toUserResponse);
     }
 
     public UserResponse getUserByUsername(String username) {
         var user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UserNotFoundException("Пользователь не найден: " + username));
-        return toUserResponse(user);
+        return userMapper.toUserResponse(user);
     }
 
     @Transactional
@@ -80,14 +83,5 @@ public class UserService {
         user.setEnabled(true);
 
         userRepository.save(user);
-    }
-
-    private UserResponse toUserResponse(User user) {
-        return new UserResponse(
-                user.getId(),
-                user.getUsername(),
-                user.getRole(),
-                user.isEnabled()
-        );
     }
 }

@@ -28,7 +28,7 @@ public class UserAdminControllerTest extends IntegrationTestBase {
         assertThat(createdUser).isNotNull();
         assertThat(Objects.requireNonNull(createdUser).username()).isEqualTo("user1");
         assertThat(createdUser.role()).isEqualTo(Role.USER);
-        assertThat(createdUser.enable()).isTrue();
+        assertThat(createdUser.enabled()).isTrue();
 
         var getResponse = testRestTemplate.exchange("/api/admin/users/user1",
                 HttpMethod.GET,
@@ -41,7 +41,7 @@ public class UserAdminControllerTest extends IntegrationTestBase {
         assertThat(body).isNotNull();
         assertThat(Objects.requireNonNull(body).username()).isEqualTo("user1");
         assertThat(body.role()).isEqualTo(Role.USER);
-        assertThat(body.enable()).isTrue();
+        assertThat(body.enabled()).isTrue();
     }
 
     @Test

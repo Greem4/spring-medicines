@@ -21,7 +21,7 @@ public class MailConfigurationTest extends IntegrationTestBase {
         String username = env.getProperty("spring.mail.username");
         String password = env.getProperty("spring.mail.password");
         boolean auth = Boolean.parseBoolean(env.getProperty("spring.mail.properties.mail.smtp.auth"));
-        boolean starttls = Boolean.parseBoolean(env.getProperty("spring.mail.properties.mail.smtp.starttls.enable"));
+        boolean starttls = Boolean.parseBoolean(env.getProperty("spring.mail.properties.mail.smtp.starttls.enabled"));
 
         assertThat(host).isEqualTo("localhost");
         assertThat(port).isEqualTo(3025);

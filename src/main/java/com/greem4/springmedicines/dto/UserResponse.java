@@ -6,6 +6,6 @@ public record UserResponse(
         Long id,
         String username,
         Role role,
-        boolean enable
+        boolean enabled
 ) {
 }

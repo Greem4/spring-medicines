@@ -21,6 +21,8 @@ spring:
     properties:
         hibernate:
           database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: none
 
   security:
     oauth2:

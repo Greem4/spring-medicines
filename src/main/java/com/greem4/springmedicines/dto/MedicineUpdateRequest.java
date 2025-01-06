@@ -6,14 +6,8 @@ import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 public record MedicineUpdateRequest(
-
-        @NotBlank()
-        String name,
-
-        @NotBlank()
-        String serialNumber,
-
-        @NotNull()
-        LocalDate expirationDate
+        @NotBlank() String name,
+        @NotBlank() String serialNumber,
+        @NotNull() LocalDate expirationDate
 ) {
 }
