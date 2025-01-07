@@ -25,6 +25,5 @@ public class RegisterRequestValidator implements Validator {
         if (userRepository.existsByUsername(request.username())) {
             errors.rejectValue("username", "Duplicate.userForm.username", "Имя пользователя уже используется");
         }
-
     }
 }
