@@ -1,6 +1,7 @@
 package com.greem4.springmedicines.config;
 
 import com.greem4.springmedicines.security.CustomOAuth2SuccessHandler;
+import com.greem4.springmedicines.security.OAuth2FailureHandler;
 import com.greem4.springmedicines.security.OAuthYandexUserService;
 import com.greem4.springmedicines.service.UserService;
 import com.greem4.springmedicines.util.security.JwtUtils;
@@ -19,6 +20,9 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.*;
+import org.springframework.web.cors.CorsConfiguration;
+
+import java.util.List;
 
 @Slf4j
 @Configuration
@@ -28,12 +32,19 @@ public class SecurityConfig {
 
     private final UserService userService;
     private final JwtUtils jwtUtils;
+    private final OAuth2FailureHandler oAuth2FailureHandler;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
-                .cors(AbstractHttpConfigurer::disable)
+                .cors(cors -> cors.configurationSource(request -> {
+                    var config = new CorsConfiguration();
+                    config.setAllowedOrigins(List.of("http://localhost:5173"));
+                    config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+                    config.setAllowedHeaders(List.of("Authorization", "Cache-Control", "Content-Type"));
+                    return config;
+                }))
 
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
@@ -60,11 +71,7 @@ public class SecurityConfig {
                 .oauth2Login(oauth2 -> oauth2
                         .userInfoEndpoint(userInfo -> userInfo.userService(oAuth2Yandex()))
                         .successHandler(oAuth2SuccessHandler())
-                        .failureHandler((req, res, ex) -> {
-                            log.debug("Request: {}", req.getRequestURI());
-                            log.debug("OAuth2 login failed: {}", ex.getMessage());
-                            res.sendRedirect("/?oauth2=error");
-                        })
+                        .failureHandler(oAuth2FailureHandler)
                 )
                 .logout(logout -> logout
                         .logoutUrl("/api/v1/auth/logout")
@@ -99,12 +106,13 @@ public class SecurityConfig {
 
     @Bean
     public JwtAuthenticationConverter jwtAuthenticationConverter() {
-        JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
-        grantedAuthoritiesConverter.setAuthoritiesClaimName("role");
-        grantedAuthoritiesConverter.setAuthorityPrefix("");
-
-        JwtAuthenticationConverter converter = new JwtAuthenticationConverter();
-        converter.setJwtGrantedAuthoritiesConverter(grantedAuthoritiesConverter);
+        var converter = new JwtAuthenticationConverter();
+        converter.setJwtGrantedAuthoritiesConverter( jwt -> {
+            var grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
+            grantedAuthoritiesConverter.setAuthoritiesClaimName("role");
+            grantedAuthoritiesConverter.setAuthorityPrefix("");
+            return grantedAuthoritiesConverter.convert(jwt);
+        });
         return converter;
     }
 }
