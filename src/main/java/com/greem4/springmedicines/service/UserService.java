@@ -5,7 +5,6 @@ import com.greem4.springmedicines.database.entity.User;
 import com.greem4.springmedicines.database.repository.UserRepository;
 import com.greem4.springmedicines.dto.ChangePasswordRequest;
 import com.greem4.springmedicines.dto.RegisterRequest;
-import com.greem4.springmedicines.dto.UserCreatedRequest;
 import com.greem4.springmedicines.dto.UserResponse;
 import com.greem4.springmedicines.exception.*;
 import com.greem4.springmedicines.mapper.UserMapper;

@@ -95,8 +95,12 @@ public class MedicineService {
         Period period = Period.between(today, expirationDate);
         int daysLeft = period.getDays() + period.getMonths() * 30 + period.getYears() * 365;
 
-        if (daysLeft > 90) return "green";// fixme: фуфуфу. {}?
-        if (daysLeft > 30) return "orange";
+        if (daysLeft > 90) {
+            return "green";
+        }
+        if (daysLeft > 30) {
+            return "orange";
+        }
         return "red";
     }
 

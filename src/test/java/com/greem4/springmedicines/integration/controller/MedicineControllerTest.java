@@ -18,7 +18,7 @@ import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class MedicineRestControllerTest extends IntegrationTestBase {
+class MedicineControllerTest extends IntegrationTestBase {
 
     @Test
     void getAllMedicines() {
@@ -81,7 +81,7 @@ class MedicineRestControllerTest extends IntegrationTestBase {
     }
 
     @Test
-    void updateMedicine() {
+    void update() {
         var request = new MedicineUpdateRequest("Новый аспирин", "5000", LocalDate.now().plusWeeks(2));
 
         var response = testRestTemplate
@@ -100,7 +100,7 @@ class MedicineRestControllerTest extends IntegrationTestBase {
     }
 
     @Test
-    void deleteMedicine() {
+    void delete() {
         var response = testRestTemplate
                 .exchange("/api/v1/medicines/1",
                         HttpMethod.DELETE,
@@ -119,7 +119,7 @@ class MedicineRestControllerTest extends IntegrationTestBase {
     }
 
     @Test
-    void updateMedicineNotFound() {
+    void updateNotFound() {
         var updateRequest = new MedicineUpdateRequest("Новый аспирин", "9999", LocalDate.now().plusMonths(1));
 
         var response = testRestTemplate
@@ -132,7 +132,7 @@ class MedicineRestControllerTest extends IntegrationTestBase {
     }
 
     @Test
-    void deleteMedicineNotFound() {
+    void deleteNotFound() {
         var response = testRestTemplate
                 .exchange("/api/v1/medicines/999",
                         HttpMethod.DELETE,

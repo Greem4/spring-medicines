@@ -22,7 +22,7 @@ public class EmailNotifier implements Notifier {
     private final JavaMailSender mailSender;
 
     @Override
-    public void send(NotificationMessage message) {
+    public void sendNotification(NotificationMessage message) {
         try {
             var mimeMessage = mailSender.createMimeMessage();
             var helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");

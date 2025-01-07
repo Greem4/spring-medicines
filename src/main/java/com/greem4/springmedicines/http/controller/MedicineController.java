@@ -22,15 +22,13 @@ import jakarta.validation.Valid;
 @RequiredArgsConstructor
 @CrossOrigin(origins = "http://localhost:3000")
 @Tag(name = "Medicine API", description = "API для управления лекарствами")
-// fixme: Rest в названии - избыточно
-public class MedicineRestController {
+public class MedicineController {
 
     private final MedicineService medicineService;
 
     @GetMapping
     public ResponseEntity<PagedModel<EntityModel<MedicineView>>> getAllMedicines(
             Pageable pageable,
-            // fixme: прикольно, впервые в жизни эту штуку вижу:)
             PagedResourcesAssembler<MedicineView> assembler) {
         Page<MedicineView> page = medicineService.getAllMedicines(pageable);
         PagedModel<EntityModel<MedicineView>> pagedModel = assembler.toModel(page);
@@ -51,15 +49,13 @@ public class MedicineRestController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<MedicineView> updateMedicine(@PathVariable Long id, @Valid @RequestBody MedicineUpdateRequest request) {
+    public ResponseEntity<MedicineView> update(@PathVariable Long id, @Valid @RequestBody MedicineUpdateRequest request) {
         MedicineView updatedMedicine = medicineService.updateMedicine(id, request);
         return ResponseEntity.ok(updatedMedicine);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteMedicine(@PathVariable Long id) {
-        // fixme: дублировать имя сущности и в названии класса, и в названии метода - точно хорошая идея?)
-        //  какой смысл это несет, кроме лишних букв в коде?
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         medicineService.deleteMedicine(id);
         return ResponseEntity.noContent().build();
     }
