@@ -29,7 +29,7 @@ public class CustomOAuth2SuccessHandler implements AuthenticationSuccessHandler 
         var usernameOrEmail = extractUsernameOrEmail(authentication);
         log.debug("Generating JWT for user/email: {}", usernameOrEmail);
 
-        var jwt = jwtUtils.generateJwtToken(usernameOrEmail);
+        var jwt = jwtUtils.generateJwtToken(usernameOrEmail, authentication.getAuthorities());
 
         writeJsonResponse(response, jwt);
         log.debug("OAuth2 login success. JWT={} for user={}", jwt, usernameOrEmail);

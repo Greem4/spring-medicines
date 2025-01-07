@@ -1,6 +1,5 @@
 package com.greem4.springmedicines.config;
 
-import com.greem4.springmedicines.filter.JwtAuthenticationFilter;
 import com.greem4.springmedicines.security.CustomOAuth2SuccessHandler;
 import com.greem4.springmedicines.service.UserService;
 import com.greem4.springmedicines.util.security.JwtUtils;
@@ -20,9 +19,10 @@ import org.springframework.security.oauth2.client.userinfo.*;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
+import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.*;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.util.Collections;
 
@@ -32,7 +32,6 @@ import java.util.Collections;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final UserService userService;
     private final JwtUtils jwtUtils;
 
@@ -61,6 +60,9 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
+                .oauth2ResourceServer(oauth2 -> oauth2
+                        .jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter()))
+                )
                 .oauth2Login(oauth2 -> oauth2
                         .userInfoEndpoint(userInfo -> userInfo.userService(oAuth2Yandex()))
                         .successHandler(oAuth2SuccessHandler())
@@ -83,16 +85,9 @@ public class SecurityConfig {
                         })
                 );
 
-        http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
-
         return http.build();
     }
 
-
-    @Bean
-    public AuthenticationSuccessHandler oAuth2SuccessHandler() {
-        return new CustomOAuth2SuccessHandler(jwtUtils);
-    }
 
     @Bean
     public OAuth2UserService<OAuth2UserRequest, OAuth2User> oAuth2Yandex() {
@@ -138,7 +133,23 @@ public class SecurityConfig {
     }
 
     @Bean
+    public AuthenticationSuccessHandler oAuth2SuccessHandler() {
+        return new CustomOAuth2SuccessHandler(jwtUtils);
+    }
+
+    @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
         return authConfig.getAuthenticationManager();
+    }
+
+    @Bean
+    public JwtAuthenticationConverter jwtAuthenticationConverter() {
+        JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
+        grantedAuthoritiesConverter.setAuthoritiesClaimName("role");
+        grantedAuthoritiesConverter.setAuthorityPrefix("");
+
+        JwtAuthenticationConverter converter = new JwtAuthenticationConverter();
+        converter.setJwtGrantedAuthoritiesConverter(grantedAuthoritiesConverter);
+        return converter;
     }
 }

@@ -32,16 +32,16 @@
         <appender-ref ref="FILE"/>
     </logger>
 
+    <logger name="org.springframework.security" level="DEBUG"/>
+
     <logger name="org.hibernate" level="WARN"/>
     <logger name="com.zaxxer.hikari" level="WARN"/>
 
-    <!-- Логирование SQL-запросов -->
     <logger name="org.hibernate.SQL" level="DEBUG" additivity="false">
         <appender-ref ref="CONSOLE"/>
         <appender-ref ref="FILE"/>
     </logger>
 
-    <!-- Логирование параметров запросов -->
     <logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="TRACE" additivity="false">
         <appender-ref ref="CONSOLE"/>
         <appender-ref ref="FILE"/>

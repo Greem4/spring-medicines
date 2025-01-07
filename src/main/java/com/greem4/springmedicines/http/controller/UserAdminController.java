@@ -2,7 +2,6 @@ package com.greem4.springmedicines.http.controller;
 
 import com.greem4.springmedicines.dto.UserResponse;
 import com.greem4.springmedicines.dto.UserRoleUpdateRequest;
-import com.greem4.springmedicines.mapper.UserMapper;
 import com.greem4.springmedicines.service.UserRoleService;
 import com.greem4.springmedicines.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +19,6 @@ public class UserAdminController {
 
     private final UserRoleService userRoleService;
     private final UserService userService;
-    private final UserMapper userMapper;
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
