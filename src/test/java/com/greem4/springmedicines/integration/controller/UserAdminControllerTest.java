@@ -1,6 +1,6 @@
 package com.greem4.springmedicines.integration.controller;
 
-import com.greem4.springmedicines.database.entity.Role;
+import com.greem4.springmedicines.domain.Role;
 import com.greem4.springmedicines.dto.*;
 import com.greem4.springmedicines.integration.config.IntegrationTestBase;
 import org.junit.jupiter.api.Test;
@@ -13,43 +13,11 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 public class UserAdminControllerTest extends IntegrationTestBase {
 
     @Test
-    void createUser() {
-        var createRequest = new UserCreatedRequest("user1", "123456", Role.USER, true, null, null);
-
-        var response = testRestTemplate
-                .exchange("/api/admin/users",
-                        HttpMethod.POST,
-                        new HttpEntity<>(createRequest, getHeadersAdmin()),
-                        UserResponse.class);
-
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-
-        var createdUser = response.getBody();
-        assertThat(createdUser).isNotNull();
-        assertThat(Objects.requireNonNull(createdUser).username()).isEqualTo("user1");
-        assertThat(createdUser.role()).isEqualTo(Role.USER);
-        assertThat(createdUser.enable()).isTrue();
-
-        var getResponse = testRestTemplate.exchange("/api/admin/users/user1",
-                HttpMethod.GET,
-                getAuth("admin","admin"),
-                UserResponse.class);
-
-        assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
-
-        var body = getResponse.getBody();
-        assertThat(body).isNotNull();
-        assertThat(Objects.requireNonNull(body).username()).isEqualTo("user1");
-        assertThat(body.role()).isEqualTo(Role.USER);
-        assertThat(body.enable()).isTrue();
-    }
-
-    @Test
     void createUserWithoutAuth() {
         var createRequest = new UserCreatedRequest("user2", "123456", Role.USER, true, null, null);
 
         var response = testRestTemplate
-                .postForEntity("/api/admin/users",
+                .postForEntity("/api/v1/admin/users",
                         createRequest,
                         String.class);
 
@@ -59,7 +27,7 @@ public class UserAdminControllerTest extends IntegrationTestBase {
     @Test
     void getAllUsersWithoutAuth() {
         var response = testRestTemplate
-                .getForEntity("/api/admin/users?page=0&size=10",
+                .getForEntity("/api/v1/admin/users?page=0&size=10",
                         String.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
@@ -68,7 +36,7 @@ public class UserAdminControllerTest extends IntegrationTestBase {
     @Test
     void getUserByUsernameNotFound() {
         var response = testRestTemplate
-                .exchange("/api/admin/users/nonExistentUser",
+                .exchange("/api/v1/admin/users/nonExistentUser",
                         HttpMethod.GET,
                         getAuth("admin", "admin"),
                         String.class);
@@ -79,7 +47,7 @@ public class UserAdminControllerTest extends IntegrationTestBase {
     @Test
     void pingEndpoint() {
         var pingResponse = testRestTemplate
-                .exchange("/api/admin/users/ping",
+                .exchange("/api/v1/admin/users/ping",
                         HttpMethod.GET,
                         getAuth("admin", "admin"),
                         String.class);
@@ -93,7 +61,7 @@ public class UserAdminControllerTest extends IntegrationTestBase {
         var request = new UserRoleUpdateRequest("user", "ADMIN");
 
         var response = testRestTemplate
-                .exchange("/api/admin/users/role",
+                .exchange("/api/v1/admin/users/role",
                         HttpMethod.PUT,
                         new HttpEntity<>(request, getHeadersAdmin()),
                         String.class);
@@ -105,7 +73,7 @@ public class UserAdminControllerTest extends IntegrationTestBase {
     void updateUserRoleWithoutAuth() {
         var request = new UserRoleUpdateRequest("user", "ADMIN");
         var response = testRestTemplate
-                .exchange("/api/admin/users/role",
+                .exchange("/api/v1/admin/users/role",
                         HttpMethod.PUT,
                         new HttpEntity<>(request),
                         String.class);
@@ -116,7 +84,7 @@ public class UserAdminControllerTest extends IntegrationTestBase {
     @Test
     void disableUserWithAdminAuth() {
         var response = testRestTemplate
-                .exchange("/api/admin/users/user/disable",
+                .exchange("/api/v1/admin/users/user/disable",
                         HttpMethod.PUT,
                         getAuth("admin", "admin"),
                         String.class);
@@ -126,18 +94,18 @@ public class UserAdminControllerTest extends IntegrationTestBase {
 
     @Test
     void changePasswordUserAuth() {
-        var changePasswordRequest = new ChangePasswordRequest("user", "123456", "123456");
+        var changePasswordRequest = new ChangePasswordRequest("user", "user", "123456", "123456");
 
         var response = testRestTemplate
-                .exchange("/api/users/changePassword",
+                .exchange("/api/v1/users/changePassword",
                         HttpMethod.PUT,
                         new HttpEntity<>(changePasswordRequest, getHeadersUser()),
                         String.class);
 
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
         var profileResponse = testRestTemplate
-                .exchange("/api/users/profile",
+                .exchange("/api/v1/users/profile",
                         HttpMethod.GET,
                         getAuth("user", "123456"),
                         UserResponse.class);

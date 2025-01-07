@@ -1,15 +1,14 @@
-package com.greem4.springmedicines.database.repository;
+package com.greem4.springmedicines.repository;
 
-import com.greem4.springmedicines.database.entity.Medicine;
+import com.greem4.springmedicines.domain.Medicine;
 import com.greem4.springmedicines.dto.MedicineExpiryNotificationDTO;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
-import java.util.List;
 
-@Repository
 public interface MedicineRepository extends JpaRepository<Medicine, Long> {
 
     @Query("""
@@ -17,5 +16,5 @@ public interface MedicineRepository extends JpaRepository<Medicine, Long> {
         from Medicine m
         where m.expirationDate < :date
     """)
-    List<MedicineExpiryNotificationDTO> findAllExpiringBefore(LocalDate date);
+    Page<MedicineExpiryNotificationDTO> findAllExpiringBefore(LocalDate date, Pageable pageable);
 }

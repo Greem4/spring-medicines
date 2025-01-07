@@ -1,5 +1,6 @@
-package com.greem4.springmedicines.exception;
+package com.greem4.springmedicines.exception.handler;
 
+import com.greem4.springmedicines.exception.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -49,6 +50,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<String> handleBadCredentials(BadCredentialsException ex) {
+        log.error("BadCredentialsException: {}", ex.getMessage());
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Неверные имя пользователя или пароль");
     }
 

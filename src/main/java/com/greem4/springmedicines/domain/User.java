@@ -1,15 +1,15 @@
-package com.greem4.springmedicines.database.entity;
+package com.greem4.springmedicines.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
 @Table(name = "users")
-@Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@Setter
+@Getter
+@ToString(exclude = {"password"})
 public class User {
 
     @Id
@@ -26,12 +26,10 @@ public class User {
     @Column(nullable = false)
     private Role role;
 
-    @Column
     private String provider;
 
-    @Column
     private String providerId;
 
     @Column(nullable = false)
-    private boolean enabled ;
+    private boolean enabled;
 }

@@ -4,14 +4,21 @@ plugins {
     id 'io.spring.dependency-management' version '1.1.6'
     id 'jacoco'
 }
-apply from: 'version.gradle'
+
+ext {
+    versions = [mockito  : '5.2.0',
+                springdoc: '2.7.0',
+                jacoco   : '0.8.12',
+                greenmail: '2.1.2',
+                jjwt     : '0.12.6']
+}
 
 group = 'com.greem4'
 version = '0.2.0-SNAPSHOT'
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(23)
+        languageVersion = JavaLanguageVersion.of(21)
     }
 }
 
@@ -26,9 +33,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter'
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter-aop'
     implementation 'org.springframework.boot:spring-boot-starter-mail'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-hateoas'
@@ -37,18 +42,14 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
     implementation 'org.springframework.security:spring-security-oauth2-jose'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
-    implementation 'org.apache.tomcat.embed:tomcat-embed-jasper'
     implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:${versions.springdoc}"
     implementation 'jakarta.persistence:jakarta.persistence-api'
-
     implementation "io.jsonwebtoken:jjwt-api:${versions.jjwt}"
-    implementation 'jakarta.validation:jakarta.validation-api'
-    implementation 'org.hibernate.validator:hibernate-validator'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
     implementation 'org.liquibase:liquibase-core'
 
-
     annotationProcessor 'org.projectlombok:lombok'
-
     compileOnly 'org.projectlombok:lombok'
 
     runtimeOnly 'org.postgresql:postgresql'
@@ -74,12 +75,11 @@ dependencies {
 
 test {
     useJUnitPlatform()
-    jvmArgs += [
-            "-XX:+EnableDynamicAgentLoading",
-            "-Djdk.instrument.traceUsage=false",
-            '-Xshare:off',
-            "-javaagent:${projectDir}/libs/byte-buddy-agent.jar"
-    ]
+
+    jvmArgs += ['-XX:+EnableDynamicAgentLoading',
+                '-Djdk.instrument.traceUsage=false',
+                '-Xshare:off',
+                "-javaagent:${projectDir}/libs/byte-buddy-agent.jar"]
     finalizedBy jacocoTestReport
 }
 
@@ -92,5 +92,5 @@ jacocoTestReport {
 }
 
 wrapper {
-    gradleVersion '8.10'
+    gradleVersion = '8.5'
 }

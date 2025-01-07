@@ -21,14 +21,6 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
-    show-sql: true
 
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.yaml
-
-logging:
-  level:
-    org.testcontainers: DEBUG
-    org.hibernate.SQL: DEBUG
-    com.greem4.springmedicines.util.security.JwtUtils: debug
-    org.hibernate.type.descriptor.sql.BasicBinder: TRACE

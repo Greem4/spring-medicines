@@ -18,11 +18,11 @@ import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/api/medicines")
+@RequestMapping("/api/v1/medicines")
 @RequiredArgsConstructor
 @CrossOrigin(origins = "http://localhost:3000")
 @Tag(name = "Medicine API", description = "API для управления лекарствами")
-public class MedicineRestController {
+public class MedicineController {
 
     private final MedicineService medicineService;
 
@@ -45,17 +45,17 @@ public class MedicineRestController {
     @PostMapping
     public ResponseEntity<MedicineView> addMedicine(@Valid @RequestBody MedicineCreateRequest request) {
         MedicineView createdMedicine = medicineService.addMedicine(request);
-        return new ResponseEntity<>(createdMedicine, HttpStatus.CREATED);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdMedicine);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<MedicineView> updateMedicine(@PathVariable Long id, @Valid @RequestBody MedicineUpdateRequest request) {
+    public ResponseEntity<MedicineView> update(@PathVariable Long id, @Valid @RequestBody MedicineUpdateRequest request) {
         MedicineView updatedMedicine = medicineService.updateMedicine(id, request);
         return ResponseEntity.ok(updatedMedicine);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteMedicine(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         medicineService.deleteMedicine(id);
         return ResponseEntity.noContent().build();
     }

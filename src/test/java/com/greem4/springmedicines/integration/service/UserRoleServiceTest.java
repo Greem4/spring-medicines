@@ -1,7 +1,7 @@
 package com.greem4.springmedicines.integration.service;
 
-import com.greem4.springmedicines.database.entity.Role;
-import com.greem4.springmedicines.database.repository.UserRepository;
+import com.greem4.springmedicines.domain.Role;
+import com.greem4.springmedicines.repository.UserRepository;
 import com.greem4.springmedicines.dto.UserRoleUpdateRequest;
 import com.greem4.springmedicines.integration.config.IntegrationTestBase;
 import com.greem4.springmedicines.service.UserRoleService;
@@ -19,7 +19,7 @@ public class UserRoleServiceTest extends IntegrationTestBase {
     private UserRoleService userRoleService;
 
     @Test
-    void testUpdateUserRole() {
+    void updateUserRoleTest() {
         var user = userRepository.findByUsername("user").orElseThrow();
         assertThat(user.getRole()).isEqualTo(Role.USER);
 
@@ -31,7 +31,7 @@ public class UserRoleServiceTest extends IntegrationTestBase {
     }
 
     @Test
-    void testDisableUserRole() {
+    void disableUserRoleTest() {
         var user = userRepository.findByUsername("user").orElseThrow();
         assertThat(user.isEnabled()).isTrue();
 
@@ -42,7 +42,7 @@ public class UserRoleServiceTest extends IntegrationTestBase {
     }
 
     @Test
-    void testEnableUserRole() {
+    void enableUserRoleTest() {
         userRoleService.disableUser("user");
         var user = userRepository.findByUsername("user").orElseThrow();
         assertThat(user.isEnabled()).isFalse();

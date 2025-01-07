@@ -16,18 +16,18 @@ public class UserControllerTest extends IntegrationTestBase {
 
     @Test
     void changePasswordAnotherUser() {
-        var changePasswordRequest = new ChangePasswordRequest("user", "123456", "123456");
+        var changePasswordRequest = new ChangePasswordRequest("user", "user",  "123456", "123456");
 
         var response = testRestTemplate
-                .exchange("/api/users/changePassword",
+                .exchange("/api/v1/users/changePassword",
                         HttpMethod.PUT,
                         new HttpEntity<>(changePasswordRequest, getHeadersUser()),
                         Void.class);
 
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
         var profileResponse = testRestTemplate
-                .exchange("/api/users/profile",
+                .exchange("/api/v1/users/profile",
                         HttpMethod.GET,
                         getAuth("user", "123456"),
                         UserResponse.class);

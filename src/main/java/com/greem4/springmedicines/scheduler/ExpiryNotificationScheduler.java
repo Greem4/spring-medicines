@@ -1,16 +1,20 @@
 package com.greem4.springmedicines.scheduler;
 
-import com.greem4.springmedicines.database.repository.MedicineRepository;
+import com.greem4.springmedicines.repository.MedicineRepository;
 import com.greem4.springmedicines.dto.MedicineExpiryNotificationDTO;
 import com.greem4.springmedicines.dto.NotificationMessage;
 import com.greem4.springmedicines.service.NotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -23,19 +27,30 @@ public class ExpiryNotificationScheduler {
 
     private final MedicineRepository medicineRepository;
     private final NotificationService notificationService;
+    private final TemplateEngine templateEngine;  // Инжектируем Thymeleaf TemplateEngine
 
     @Scheduled(cron = "0 0 7 * * ?")
     public void notifyMedicineExpiringSoon() {
         LocalDate limitDate = LocalDate.now().plusWeeks(1);
 
-        List<MedicineExpiryNotificationDTO> expiringList = medicineRepository.findAllExpiringBefore(limitDate);
+        int pageNumber = 0;
+        int pageSize = 50;
+        List<MedicineExpiryNotificationDTO> allDtos = new ArrayList<>();
 
-        if (expiringList.isEmpty()) {
+        Page<MedicineExpiryNotificationDTO> page;
+        do {
+            PageRequest pageable = PageRequest.of(pageNumber, pageSize);
+            page = medicineRepository.findAllExpiringBefore(limitDate, pageable);
+            allDtos.addAll(page.getContent());
+            pageNumber++;
+        } while (page.hasNext());
+
+        if (allDtos.isEmpty()) {
             return;
         }
 
         String subject = "Уведомление: Срок годности препаратов истекает через неделю";
-        String body = buildNotificationBody(expiringList);
+        String body = buildNotificationBody(allDtos);
 
         NotificationMessage message = new NotificationMessage(
                 mailTo,
@@ -46,64 +61,8 @@ public class ExpiryNotificationScheduler {
     }
 
     private String buildNotificationBody(List<MedicineExpiryNotificationDTO> dtos) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("<html><body>");
-
-        sb.append("<h2 style=\"color:#333333;\">Срок годности истекает через неделю:</h2>");
-
-        sb.append("<table style=\"width:100%; border-collapse: collapse;\">");
-
-        sb.append("<thead>");
-        sb.append("<tr>");
-        sb.append("<th style=\"border: 1px solid #dddddd; text-align: left; padding: 8px; background-color:#f2f2f2;\">№</th>");
-        sb.append("<th style=\"border: 1px solid #dddddd; text-align: left; padding: 8px; background-color:#f2f2f2;\">Название препарата</th>");
-        sb.append("<th style=\"border: 1px solid #dddddd; text-align: left; padding: 8px; background-color:#f2f2f2;\">Серия</th>");
-        sb.append("<th style=\"border: 1px solid #dddddd; text-align: left; padding: 8px; background-color:#f2f2f2;\">Срок годности</th>");
-        sb.append("</tr>");
-        sb.append("</thead>");
-
-        sb.append("<tbody>");
-
-        int i = 1;
-        for (MedicineExpiryNotificationDTO dto : dtos) {
-            String rowColor = (i % 2 == 0) ? "#f9f9f9" : "#ffffff";
-            sb.append("<tr style=\"background-color:").append(rowColor).append(";\">");
-
-            sb.append("<td style=\"border: 1px solid #dddddd; padding: 8px;\">").append(i++).append("</td>");
-
-            sb.append("<td style=\"border: 1px solid #dddddd; padding: 8px;\">")
-                    .append("<span style=\"color:red; font-weight:bold;\">")
-                    .append(escapeHtml(dto.name()))
-                    .append("</span>")
-                    .append("</td>");
-
-            sb.append("<td style=\"border: 1px solid #dddddd; padding: 8px;\">")
-                    .append(escapeHtml(dto.serialNumber()))
-                    .append("</td>");
-
-            sb.append("<td style=\"border: 1px solid #dddddd; padding: 8px;\">")
-                    .append(escapeHtml(dto.expiryDate()  // TODO однажды подумать над форматом
-                            .format(DateTimeFormatter.ofPattern("dd MMM yyyy", Locale.forLanguageTag("ru")))))
-                    .append("</td>");
-
-            sb.append("</tr>");
-        }
-
-        sb.append("</tbody>");
-        sb.append("</table>");
-        sb.append("</body></html>");
-        return sb.toString();
+        var thymeleafContext = new Context(Locale.forLanguageTag("ru"));
+        thymeleafContext.setVariable("medicines", dtos);
+        return templateEngine.process("expiry-notification", thymeleafContext);
     }
-
-    private String escapeHtml(String text) {
-        if (text == null) {
-            return "";
-        }
-        return text.replace("&", "&amp;")
-                .replace("<", "&lt;")
-                .replace(">", "&gt;")
-                .replace("\"", "&quot;")
-                .replace("'", "&#39;");
-    }
-
 }

@@ -1,7 +1,7 @@
 package com.greem4.springmedicines.integration.service;
 
-import com.greem4.springmedicines.database.entity.Role;
-import com.greem4.springmedicines.database.repository.UserRepository;
+import com.greem4.springmedicines.domain.Role;
+import com.greem4.springmedicines.repository.UserRepository;
 import com.greem4.springmedicines.dto.UserRoleUpdateRequest;
 import com.greem4.springmedicines.integration.config.IntegrationTestBase;
 import com.greem4.springmedicines.service.UserRoleService;

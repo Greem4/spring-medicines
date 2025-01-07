@@ -88,7 +88,7 @@ public abstract class IntegrationTestBase {
         var loginRequest = new LoginRequest(username, password);
 
         var response = testRestTemplate.postForEntity(
-                "/api/auth/login",
+                "/api/v1/auth/login",
                 new HttpEntity<>(loginRequest, getHttpHeaders()),
                 JwtResponse.class
         );

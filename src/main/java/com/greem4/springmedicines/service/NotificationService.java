@@ -15,7 +15,7 @@ public class NotificationService {
 
     public void sendNotification(NotificationMessage message) {
         for (Notifier notifier : notifiers) {
-            notifier.send(message);
+            notifier.sendNotification(message);
         }
     }
 }

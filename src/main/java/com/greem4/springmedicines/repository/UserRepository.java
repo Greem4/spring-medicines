@@ -1,6 +1,6 @@
-package com.greem4.springmedicines.database.repository;
+package com.greem4.springmedicines.repository;
 
-import com.greem4.springmedicines.database.entity.User;
+import com.greem4.springmedicines.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

@@ -1,18 +1,15 @@
-package com.greem4.springmedicines.database.entity;
+package com.greem4.springmedicines.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.format.annotation.DateTimeFormat;
-
 import java.time.LocalDate;
 
 @Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "medicines")
+@Table(name = "medicine")
 public class Medicine extends Auditable {
 
     @Id
@@ -25,7 +22,5 @@ public class Medicine extends Auditable {
     private String serialNumber;
 
     @Column(name = "expiration_date")
-    @DateTimeFormat(pattern = "dd-MM-yyyy")
     private LocalDate expirationDate;
-
 }

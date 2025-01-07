@@ -1,6 +1,6 @@
-TRUNCATE TABLE medicines RESTART IDENTITY CASCADE;
+TRUNCATE TABLE medicine RESTART IDENTITY CASCADE;
 
-INSERT INTO medicines (name, serial_number, expiration_date)
+INSERT INTO medicine (name, serial_number, expiration_date)
 VALUES ('Аспирин', 'SN101', '2024-12-22'),
        ('Парацетамол', 'SN102', '2025-01-15'),
        ('Ибупрофен', 'SN103', '2025-02-10'),
