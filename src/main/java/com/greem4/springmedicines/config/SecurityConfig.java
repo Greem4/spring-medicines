@@ -1,6 +1,7 @@
 package com.greem4.springmedicines.config;
 
 import com.greem4.springmedicines.filter.JwtAuthenticationFilter;
+import com.greem4.springmedicines.security.CustomOAuth2SuccessHandler;
 import com.greem4.springmedicines.service.UserService;
 import com.greem4.springmedicines.util.security.JwtUtils;
 import jakarta.servlet.http.HttpServletResponse;
@@ -87,39 +88,10 @@ public class SecurityConfig {
         return http.build();
     }
 
+
     @Bean
     public AuthenticationSuccessHandler oAuth2SuccessHandler() {
-        // fixme: декомпозиция хромает
-        return (request, response, authentication) -> {
-            var principal = authentication.getPrincipal();
-            log.debug("Registered user: {}", request);
-            log.debug("OAuth2SuccessHandler invoked. Principal type: {}", principal.getClass().getName());
-
-            String usernameOrEmail;
-            if (principal instanceof org.springframework.security.core.userdetails.UserDetails userDetails) {
-                usernameOrEmail = userDetails.getUsername();
-            } else if (principal instanceof OAuth2User oAuth2User) {
-                Object possibleEmail = oAuth2User.getAttributes().get("default_email");
-                if (possibleEmail == null) {
-                    possibleEmail = oAuth2User.getAttributes().get("email");
-                }
-                usernameOrEmail = (possibleEmail != null) ? possibleEmail.toString() : authentication.getName();
-            } else {
-                usernameOrEmail = authentication.getName();
-            }
-
-            log.debug("Generating JWT for user/email: {}", usernameOrEmail);
-            String jwt = jwtUtils.generateJwtToken(usernameOrEmail);
-
-            response.setContentType("application/json");
-            response.setCharacterEncoding("UTF-8");
-
-            String json = String.format("{\"token\": \"%s\"}", jwt);
-            response.getWriter().write(json);
-            response.getWriter().flush();
-
-            log.debug("OAuth2 login success. JWT={} for user={}", jwt, usernameOrEmail);
-        };
+        return new CustomOAuth2SuccessHandler(jwtUtils);
     }
 
     @Bean
