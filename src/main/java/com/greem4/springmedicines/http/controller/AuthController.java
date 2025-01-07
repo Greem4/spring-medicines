@@ -65,7 +65,6 @@ public class AuthController {
 
     @PostMapping("/logout")
     public ResponseEntity<String> logout() {
-// fixme: а как же глобал логаут?)
         return ResponseEntity.ok("Logout successful");
     }
 }

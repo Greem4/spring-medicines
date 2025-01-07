@@ -1,6 +1,6 @@
 package com.greem4.springmedicines.scheduler;
 
-import com.greem4.springmedicines.database.repository.MedicineRepository;
+import com.greem4.springmedicines.repository.MedicineRepository;
 import com.greem4.springmedicines.dto.MedicineExpiryNotificationDTO;
 import com.greem4.springmedicines.dto.NotificationMessage;
 import com.greem4.springmedicines.service.NotificationService;

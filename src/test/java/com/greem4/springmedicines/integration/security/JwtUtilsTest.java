@@ -36,26 +36,15 @@ class JwtUtilsTest extends IntegrationTestBase {
     }
 
     @Test
-    void validateJwtToken() {
+    void validateJwtTokenWithValidToken() {
         var jwtResponse = authenticate("admin", "admin");
         var validToken = jwtResponse.token();
         var isValid = jwtUtils.validateJwtToken(validToken);
         assertThat(isValid).isTrue();
+    }
 
-        var invalidToken = "invalid.token.value";
-        var isInvalid = jwtUtils.validateJwtToken(invalidToken);
-// fixme: плохая практика. Если тестишь несколько сценариев - это должно быть несколько @Test-методов
-        assertThat(isInvalid).isFalse();
-
-        String expiredToken = Jwts.builder()
-                .subject("expiredUser")
-                .issuedAt(new Date(System.currentTimeMillis() - 10000))
-                .expiration(new Date(System.currentTimeMillis() - 500000))
-                .signWith(jwtUtils.getKey())
-                .compact();
-        var isExpired = jwtUtils.validateJwtToken(expiredToken);
-        assertThat(isExpired).isFalse();
-
+    @Test
+    void validateJwtTokenWithInvalidSignature() {
         SecretKey anotherKey = Keys.
                 hmacShaKeyFor("aVeryS+fddfdeDESDeeqdr-tKeyForJWTAuthentica=".
                         getBytes(StandardCharsets.UTF_8));
@@ -67,6 +56,22 @@ class JwtUtilsTest extends IntegrationTestBase {
                 .compact();
         var hasInvalidSignature = jwtUtils.validateJwtToken(tokenWithInvalidSignature);
         assertThat(hasInvalidSignature).isFalse();
+    }
+
+    @Test
+    void validateJwtTokenWithInvalidToken() {
+        var invalidToken = "invalid.token.value";
+        var isInvalid = jwtUtils.validateJwtToken(invalidToken);
+        assertThat(isInvalid).isFalse();
+
+        String expiredToken = Jwts.builder()
+                .subject("expiredUser")
+                .issuedAt(new Date(System.currentTimeMillis() - 10000))
+                .expiration(new Date(System.currentTimeMillis() - 500000))
+                .signWith(jwtUtils.getKey())
+                .compact();
+        var isExpired = jwtUtils.validateJwtToken(expiredToken);
+        assertThat(isExpired).isFalse();
     }
 
     @Test

@@ -4,7 +4,7 @@ import com.greem4.springmedicines.dto.JwtResponse;
 import com.greem4.springmedicines.dto.LoginRequest;
 import com.greem4.springmedicines.dto.RegisterRequest;
 import com.greem4.springmedicines.dto.UserResponse;
-import com.greem4.springmedicines.database.entity.Role;
+import com.greem4.springmedicines.domain.Role;
 import com.greem4.springmedicines.integration.config.IntegrationTestBase;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.*;

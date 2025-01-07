@@ -1,6 +1,6 @@
 package com.greem4.springmedicines.validation;
 
-import com.greem4.springmedicines.database.repository.UserRepository;
+import com.greem4.springmedicines.repository.UserRepository;
 import com.greem4.springmedicines.dto.ChangePasswordRequest;
 import com.greem4.springmedicines.exception.UserNotFoundException;
 import lombok.RequiredArgsConstructor;

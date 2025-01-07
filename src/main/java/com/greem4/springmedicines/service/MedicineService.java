@@ -1,7 +1,7 @@
 package com.greem4.springmedicines.service;
 
-import com.greem4.springmedicines.database.entity.Medicine;
-import com.greem4.springmedicines.database.repository.MedicineRepository;
+import com.greem4.springmedicines.domain.Medicine;
+import com.greem4.springmedicines.repository.MedicineRepository;
 import com.greem4.springmedicines.dto.MedicineCreateRequest;
 import com.greem4.springmedicines.dto.MedicineUpdateRequest;
 import com.greem4.springmedicines.dto.MedicineView;

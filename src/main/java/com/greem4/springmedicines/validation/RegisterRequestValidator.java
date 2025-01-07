@@ -1,7 +1,7 @@
 package com.greem4.springmedicines.validation;
 
 import com.greem4.springmedicines.dto.RegisterRequest;
-import com.greem4.springmedicines.database.repository.UserRepository;
+import com.greem4.springmedicines.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;

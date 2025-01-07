@@ -1,8 +1,8 @@
 package com.greem4.springmedicines.service;
 
-import com.greem4.springmedicines.database.entity.User;
-import com.greem4.springmedicines.database.entity.Role;
-import com.greem4.springmedicines.database.repository.UserRepository;
+import com.greem4.springmedicines.domain.User;
+import com.greem4.springmedicines.domain.Role;
+import com.greem4.springmedicines.repository.UserRepository;
 import com.greem4.springmedicines.dto.UserRoleUpdateRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

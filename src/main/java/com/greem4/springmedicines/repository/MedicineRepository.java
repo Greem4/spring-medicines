@@ -1,6 +1,6 @@
-package com.greem4.springmedicines.database.repository;
+package com.greem4.springmedicines.repository;
 
-import com.greem4.springmedicines.database.entity.Medicine;
+import com.greem4.springmedicines.domain.Medicine;
 import com.greem4.springmedicines.dto.MedicineExpiryNotificationDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

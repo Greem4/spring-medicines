@@ -1,4 +1,4 @@
-package com.greem4.springmedicines.database.entity;
+package com.greem4.springmedicines.domain;
 
 import jakarta.persistence.*;
 import lombok.*;

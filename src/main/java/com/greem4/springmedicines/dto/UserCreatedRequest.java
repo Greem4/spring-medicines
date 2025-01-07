@@ -1,6 +1,6 @@
 package com.greem4.springmedicines.dto;
 
-import com.greem4.springmedicines.database.entity.Role;
+import com.greem4.springmedicines.domain.Role;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 

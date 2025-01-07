@@ -48,7 +48,7 @@ public class JwtUtils {
         try {
             Jwts.parser()
                     .verifyWith((SecretKey) key)
-                    .clockSkewSeconds(60) // Можно сделать конфигурируемым
+                    .clockSkewSeconds(60)
                     .build()
                     .parseSignedClaims(authToken);
             return true;

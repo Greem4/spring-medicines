@@ -1,6 +1,6 @@
 package com.greem4.springmedicines.mapper;
 
-import com.greem4.springmedicines.database.entity.Medicine;
+import com.greem4.springmedicines.domain.Medicine;
 import com.greem4.springmedicines.dto.MedicineView;
 
 import java.time.LocalDate;

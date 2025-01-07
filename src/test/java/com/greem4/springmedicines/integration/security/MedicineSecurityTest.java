@@ -1,7 +1,6 @@
 package com.greem4.springmedicines.integration.security;
 
 import com.greem4.springmedicines.dto.MedicineCreateRequest;
-import com.greem4.springmedicines.dto.MedicineView;
 import com.greem4.springmedicines.integration.config.IntegrationTestBase;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.ParameterizedTypeReference;
@@ -23,16 +22,6 @@ public class MedicineSecurityTest extends IntegrationTestBase {
                         });
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).isNotNull();
-    }
-
-    @Test
-    void getByIdWithoutAuth() {
-        var response = testRestTemplate.
-                getForEntity("/api/v1/medicines/1",
-                        MedicineView.class);
-
-// fixme: в чем смысл теста? Ты-то знаешь, что он в этой ситуации должен вернуть
-        assertThat(response.getStatusCode()).isIn(HttpStatus.OK, HttpStatus.NOT_FOUND);
     }
 
     @Test

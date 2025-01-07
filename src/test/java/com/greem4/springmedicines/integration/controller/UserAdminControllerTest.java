@@ -1,6 +1,6 @@
 package com.greem4.springmedicines.integration.controller;
 
-import com.greem4.springmedicines.database.entity.Role;
+import com.greem4.springmedicines.domain.Role;
 import com.greem4.springmedicines.dto.*;
 import com.greem4.springmedicines.integration.config.IntegrationTestBase;
 import org.junit.jupiter.api.Test;

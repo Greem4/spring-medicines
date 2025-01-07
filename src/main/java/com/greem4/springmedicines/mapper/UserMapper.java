@@ -1,6 +1,6 @@
 package com.greem4.springmedicines.mapper;
 
-import com.greem4.springmedicines.database.entity.User;
+import com.greem4.springmedicines.domain.User;
 import com.greem4.springmedicines.dto.UserResponse;
 import org.springframework.stereotype.Component;
 
