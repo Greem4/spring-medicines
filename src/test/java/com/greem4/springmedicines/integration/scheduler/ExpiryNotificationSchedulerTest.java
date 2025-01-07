@@ -91,7 +91,7 @@ public class ExpiryNotificationSchedulerTest extends IntegrationTestBase {
     }
 
     @Test
-    void notifyMedicinesExpiringSoonNoEmailIfExpiryMoreThanWeek(){
+    void notifyMedicinesExpiringSoonNoEmailIfExpiryMoreThanWeek() {
         var request = new MedicineCreateRequest("AspirinLong", "99999", LocalDate.now().plusWeeks(2));
         medicineService.addMedicine(request);
 
@@ -104,17 +104,16 @@ public class ExpiryNotificationSchedulerTest extends IntegrationTestBase {
     private String extractContentRecursively(Object content) throws Exception {
         if (content instanceof String text) {
             return text;
-            // fixme: у тебя в if гарантирован return. Зачем дальше использовать else if вместо обычного if?
-        } else if (content instanceof Multipart multipart) {
+        }
+        if (content instanceof Multipart multipart) {
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < multipart.getCount(); i++) {
                 BodyPart bodyPart = multipart.getBodyPart(i);
                 sb.append(extractContentRecursively(bodyPart.getContent()));
             }
             return sb.toString();
-        } else {
-            return "";
         }
+        return "";
     }
 
     private String extractBodyContent(MimeMessage msg) throws Exception {

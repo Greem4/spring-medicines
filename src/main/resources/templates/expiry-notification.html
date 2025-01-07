@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <title>Уведомление о скором истечении срока годности лекарств</title>
+    <style>
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid #dddddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        tr:nth-child(even) { background-color: #f9f9f9; }
+    </style>
+</head>
+<body>
+<h2 style="color:#333333;">Срок годности истекает через неделю:</h2>
+<table>
+    <thead>
+    <tr>
+        <th>№</th>
+        <th>Название препарата</th>
+        <th>Серия</th>
+        <th>Срок годности</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="medicine, iterStat : ${medicines}"
+        th:style="${iterStat.index % 2 == 0} ? 'background-color:#ffffff;' : 'background-color:#f9f9f9;'">
+        <td th:text="${iterStat.count}">1</td>
+        <td>
+            <span style="color:red; font-weight:bold;" th:text="${medicine.name}">Название</span>
+        </td>
+        <td th:text="${medicine.serialNumber}">Серия</td>
+        <!-- Используем #temporals для форматирования LocalDate -->
+        <td th:text="${#temporals.format(medicine.expiryDate, 'dd MMM yyyy')}">Дата</td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
