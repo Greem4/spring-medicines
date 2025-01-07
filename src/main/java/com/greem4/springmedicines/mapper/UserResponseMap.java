@@ -2,12 +2,10 @@ package com.greem4.springmedicines.mapper;
 
 import com.greem4.springmedicines.domain.User;
 import com.greem4.springmedicines.dto.UserResponse;
-import org.springframework.stereotype.Component;
 
-@Component
-public class UserMapper {
+public class UserResponseMap {
 
-    public UserResponse toUserResponse(User user) {
+    public static UserResponse toUserResponse(User user) {
         if (user == null) {
             return null;
         }

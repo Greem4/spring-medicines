@@ -6,7 +6,7 @@ import com.greem4.springmedicines.dto.MedicineCreateRequest;
 import com.greem4.springmedicines.dto.MedicineUpdateRequest;
 import com.greem4.springmedicines.dto.MedicineView;
 import com.greem4.springmedicines.exception.ResourceNotFoundException;
-import com.greem4.springmedicines.mapper.MedicineMapper;
+import com.greem4.springmedicines.mapper.MedicineViewMap;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
-import static com.greem4.springmedicines.mapper.MedicineMapper.toMedicineView;
+import static com.greem4.springmedicines.mapper.MedicineViewMap.toMedicineView;
 
 
 @Service
@@ -27,12 +27,12 @@ public class MedicineService {
 
     public Page<MedicineView> getAllMedicines(Pageable pageable) {
         return medicineRepository.findAll(pageable)
-                .map(MedicineMapper::toMedicineView);
+                .map(MedicineViewMap::toMedicineView);
     }
 
     public Optional<MedicineView> findById(Long id) {
         return medicineRepository.findById(id)
-                .map(MedicineMapper::toMedicineView);
+                .map(MedicineViewMap::toMedicineView);
     }
 
     @Transactional

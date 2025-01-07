@@ -7,7 +7,7 @@ import com.greem4.springmedicines.dto.ChangePasswordRequest;
 import com.greem4.springmedicines.dto.RegisterRequest;
 import com.greem4.springmedicines.dto.UserResponse;
 import com.greem4.springmedicines.exception.*;
-import com.greem4.springmedicines.mapper.UserMapper;
+import com.greem4.springmedicines.mapper.UserResponseMap;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +26,6 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final UserMapper userMapper;
 
     public Optional<User> findByProviderAndProviderId(String provider, String providerId) {
         return userRepository.findByProviderAndProviderId(provider, providerId);
@@ -46,17 +45,17 @@ public class UserService {
         user.setProviderId(null);
 
         var saveUser = userRepository.save(user);
-        return userMapper.toUserResponse(saveUser);
+        return UserResponseMap.toUserResponse(saveUser);
     }
 
     public Page<UserResponse> getAllUsers(Pageable pageable) {
-        return userRepository.findAll(pageable).map(userMapper::toUserResponse);
+        return userRepository.findAll(pageable).map(UserResponseMap::toUserResponse);
     }
 
     public UserResponse getUserByUsername(String username) {
         var user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UserNotFoundException("Пользователь не найден: " + username));
-        return userMapper.toUserResponse(user);
+        return UserResponseMap.toUserResponse(user);
     }
 
     @Transactional

@@ -7,7 +7,7 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
 
-public class MedicineMapper {
+public class MedicineViewMap {
     private static final DateTimeFormatter DATE_FORMATER = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
     public static MedicineView toMedicineView(Medicine medicine) {

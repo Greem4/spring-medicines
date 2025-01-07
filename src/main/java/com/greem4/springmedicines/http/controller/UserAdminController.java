@@ -1,16 +1,21 @@
 package com.greem4.springmedicines.http.controller;
 
+import com.greem4.springmedicines.domain.User;
+import com.greem4.springmedicines.domain.UserAction;
 import com.greem4.springmedicines.dto.UserResponse;
 import com.greem4.springmedicines.dto.UserRoleUpdateRequest;
+import com.greem4.springmedicines.mapper.UserResponseMap;
 import com.greem4.springmedicines.service.UserRoleService;
 import com.greem4.springmedicines.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 
 @RestController
 @RequestMapping("/api/v1/admin/users")
@@ -22,10 +27,10 @@ public class UserAdminController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public Page<UserResponse> getAllUsers(
-           @PageableDefault(page = 0, size = 10) Pageable pageable
-    ) {
-       return userService.getAllUsers(pageable);
+    public ResponseEntity<Page<UserResponse>> getAllUsers(
+            @PageableDefault(sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
+        var users = userService.getAllUsers(pageable);
+        return ResponseEntity.ok(users);
     }
 
     @GetMapping("/{username}")
@@ -40,16 +45,22 @@ public class UserAdminController {
         return ResponseEntity.ok(updated);
     }
 
-    @PutMapping("/{username}/enable")
-    public ResponseEntity<?> enableUser(@PathVariable String username) {
-        var update = userRoleService.enableUser(username);
-        return ResponseEntity.ok(update);
-    }
+    @PutMapping("/{username}/{action}")
+    public ResponseEntity<UserResponse> updateUserStatus(
+            @PathVariable String username,
+            @PathVariable String action) {
+        UserAction userAction = UserAction.fromString(action);
+        User updated;
 
-    @PutMapping("/{username}/disable")
-    public ResponseEntity<?> disableUser(@PathVariable String username) {
-        var update = userRoleService.disableUser(username);
-        return ResponseEntity.ok(update);
+        switch (userAction) {
+            case ENABLE -> updated = userRoleService.enableUser(username);
+            case DISABLE -> updated = userRoleService.disableUser(username);
+            default ->
+                    throw new IllegalArgumentException("Unsupported action: " + action);
+        }
+        var userResponse = UserResponseMap.toUserResponse(updated);
+
+        return ResponseEntity.ok(userResponse);
     }
 
     @GetMapping("/ping")

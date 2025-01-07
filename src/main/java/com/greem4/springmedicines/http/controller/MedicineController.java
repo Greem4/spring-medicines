@@ -45,7 +45,7 @@ public class MedicineController {
     @PostMapping
     public ResponseEntity<MedicineView> addMedicine(@Valid @RequestBody MedicineCreateRequest request) {
         MedicineView createdMedicine = medicineService.addMedicine(request);
-        return new ResponseEntity<>(createdMedicine, HttpStatus.CREATED);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdMedicine);
     }
 
     @PutMapping("/{id}")

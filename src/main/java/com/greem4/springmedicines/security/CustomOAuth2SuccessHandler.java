@@ -31,8 +31,9 @@ public class CustomOAuth2SuccessHandler implements AuthenticationSuccessHandler 
 
         var jwt = jwtUtils.generateJwtToken(usernameOrEmail, authentication.getAuthorities());
 
-        writeJsonResponse(response, jwt);
-        log.debug("OAuth2 login success. JWT={} for user={}", jwt, usernameOrEmail);
+        String redirectUrl = "http://localhost:5173/oauth2/redirect?token=" + jwt;
+        log.debug("Redirecting to URL: {}", redirectUrl);
+        response.sendRedirect(redirectUrl);
     }
 
     private void logPrincipalInfo(HttpServletRequest request, Authentication authentication) {
@@ -54,13 +55,5 @@ public class CustomOAuth2SuccessHandler implements AuthenticationSuccessHandler 
             return (possibleEmail != null) ? possibleEmail.toString() : authentication.getName();
         }
         return authentication.getName();
-    }
-
-    private void writeJsonResponse(HttpServletResponse response, String jwt) throws IOException {
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
-        var json = String.format("{\"token\": \"%s\"}", jwt);
-        response.getWriter().write(json);
-        response.getWriter().flush();
     }
 }
