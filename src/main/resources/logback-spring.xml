@@ -32,7 +32,7 @@
         <appender-ref ref="FILE"/>
     </logger>
 
-    <logger name="org.springframework.security" level="DEBUG"/>
+    <logger name="org.springframework.security" level="INFO"/>
 
     <logger name="org.hibernate" level="WARN"/>
     <logger name="com.zaxxer.hikari" level="WARN"/>
