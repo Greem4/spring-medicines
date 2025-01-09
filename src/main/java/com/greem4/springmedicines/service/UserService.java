@@ -79,4 +79,11 @@ public class UserService {
 
         userRepository.save(user);
     }
+
+    @Transactional
+    public void delete(Long id) {
+        var existingUser = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("Пользователь не найден"));
+        userRepository.delete(existingUser);
+    }
 }

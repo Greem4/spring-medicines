@@ -45,6 +45,17 @@ public class UserAdminControllerTest extends IntegrationTestBase {
     }
 
     @Test
+    void deleteUserById() {
+        var response = testRestTemplate
+                .exchange("/api/v1/admin/users/2",
+                        HttpMethod.DELETE,
+                        getAuth("admin", "admin"),
+                        String.class
+                );
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+    }
+
+    @Test
     void pingEndpoint() {
         var pingResponse = testRestTemplate
                 .exchange("/api/v1/admin/users/ping",

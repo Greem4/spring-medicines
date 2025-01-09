@@ -12,6 +12,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,10 +30,12 @@ public class UserAdminController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<Page<UserResponse>> getAllUsers(
-            @PageableDefault(sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
-        var users = userService.getAllUsers(pageable);
-        return ResponseEntity.ok(users);
+    public ResponseEntity<PagedModel<EntityModel<UserResponse>>> getAllUsers(
+            @PageableDefault(sort = "id", direction = Sort.Direction.ASC) Pageable pageable,
+            PagedResourcesAssembler<UserResponse> assembler) {
+        Page<UserResponse> users = userService.getAllUsers(pageable);
+        PagedModel<EntityModel<UserResponse>> pageModel = assembler.toModel(users);
+        return ResponseEntity.ok(pageModel);
     }
 
     @GetMapping("/{username}")
@@ -61,6 +66,12 @@ public class UserAdminController {
         var userResponse = UserResponseMap.toUserResponse(updated);
 
         return ResponseEntity.ok(userResponse);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        userService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/ping")
