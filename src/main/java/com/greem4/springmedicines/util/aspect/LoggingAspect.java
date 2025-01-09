@@ -34,7 +34,7 @@ public class LoggingAspect {
                 .append(i < args.length - 1 ? ", " : ""));
 
         String threadName = Thread.currentThread().getName();
-        log.info("[THREAD: {}] Starting method call: {}.{}({})",
+        log.debug("[THREAD: {}] Starting method call: {}.{}({})",
                 threadName, className, methodName, argumentsInfo);
 
         Instant start = Instant.now();

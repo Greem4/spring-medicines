@@ -33,12 +33,12 @@
     </logger>
 
     <logger name="org.springframework.security" level="DEBUG" additivity="false"/>
-    <logger name="com.greem4.springmedicines.util.aspect.LoggingAspect" level="INFO" additivity="false"/>
+    <logger name="com.greem4.springmedicines.util.aspect" level="info" />
 
     <logger name="org.hibernate" level="WARN"/>
     <logger name="com.zaxxer.hikari" level="WARN"/>
 
-    <logger name="org.hibernate.SQL" level="INFO" additivity="false">
+    <logger name="org.hibernate.SQL" level="info" additivity="false">
         <appender-ref ref="CONSOLE"/>
         <appender-ref ref="FILE"/>
     </logger>
