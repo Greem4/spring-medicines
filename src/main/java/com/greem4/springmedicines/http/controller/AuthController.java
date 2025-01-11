@@ -32,9 +32,4 @@ public class AuthController {
         log.debug("User {} authenticated successfully.", loginRequest.username());
         return ResponseEntity.ok(jwtResponse);
     }
-
-    @PostMapping("/logout")
-    public ResponseEntity<String> logout() {
-        return ResponseEntity.ok("Logout successful");
-    }
 }

@@ -8,6 +8,7 @@ import com.greem4.springmedicines.util.security.JwtUtils;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -30,6 +31,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
+    @Value("${base.url}")
+    private String BASE_URL;
+
     private final UserService userService;
     private final JwtUtils jwtUtils;
     private final OAuth2FailureHandler oAuth2FailureHandler;
@@ -40,9 +44,10 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(request -> {
                     var config = new CorsConfiguration();
-                    config.setAllowedOrigins(List.of("http://localhost:5173"));
+                    config.setAllowedOrigins(List.of(BASE_URL));
                     config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
                     config.setAllowedHeaders(List.of("Authorization", "Cache-Control", "Content-Type"));
+                    config.setAllowCredentials(true);
                     return config;
                 }))
 
@@ -75,7 +80,10 @@ public class SecurityConfig {
                 )
                 .logout(logout -> logout
                         .logoutUrl("/api/v1/auth/logout")
-                        .logoutSuccessUrl("/")
+                        .logoutSuccessHandler((request, response, authentication) -> {
+                            response.setStatus(HttpServletResponse.SC_OK);
+                            response.getWriter().write("Logout Successful");
+                        })
                         .permitAll()
                 )
 
@@ -107,7 +115,7 @@ public class SecurityConfig {
     @Bean
     public JwtAuthenticationConverter jwtAuthenticationConverter() {
         var converter = new JwtAuthenticationConverter();
-        converter.setJwtGrantedAuthoritiesConverter( jwt -> {
+        converter.setJwtGrantedAuthoritiesConverter(jwt -> {
             var grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
             grantedAuthoritiesConverter.setAuthoritiesClaimName("role");
             grantedAuthoritiesConverter.setAuthorityPrefix("");

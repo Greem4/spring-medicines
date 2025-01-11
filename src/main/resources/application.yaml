@@ -1,4 +1,10 @@
+base:
+  url: ${BASE_URL}
+
 app:
+  oauth2:
+    success-redirect-url: ${SUCCESS_REDIRECT}
+    failure-redirect-url: ${FAILURE_REDIRECT}
   mail:
     sender: ${MAIL_SET_FROM}
     to: ${MAIL_TO}
@@ -23,6 +29,7 @@ spring:
           database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: none
+    open-in-view: false
 
   security:
     oauth2:

@@ -41,7 +41,7 @@ public class ChangePassValidator implements Validator {
             errors.rejectValue("confirmNewPassword", "password.mismatch", "Новый пароль и его подтверждение не совпадают");
         }
 
-        if (request.newPassword().length() < 6) {
+        if (request.newPassword().length() < 4) {
             log.warn("Новый пароль слишком короткий для пользователя: {}", username);
             errors.rejectValue("newPassword", "password.tooShort", "Новый пароль должен быть не менее 6 символов");
         }

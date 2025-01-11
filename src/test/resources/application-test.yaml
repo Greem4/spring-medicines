@@ -1,11 +1,17 @@
-jwt:
-  secret: aVeryS+cureAndLongSecr-tKeyForJWTAuthentica=
-  expirationMs: 3600000
+base:
+  url: test://test//test
 
 app:
+  oauth2:
+    success-redirect-url: test://test//test
+    failure-redirect-url: test://test//test
   mail:
     sender: test@localhost
     to: test-recipient@mail.com
+
+jwt:
+  secret: aVeryS+cureAndLongSecr-tKeyForJWTAuthentica=
+  expirationMs: 3600000
 
 spring:
   mail:

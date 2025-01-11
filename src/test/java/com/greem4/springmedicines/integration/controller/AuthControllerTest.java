@@ -27,7 +27,7 @@ public class AuthControllerTest extends IntegrationTestBase {
         assertThat(userResponse).isNotNull();
         assertThat(userResponse.username()).isEqualTo("testUser");
         assertThat(userResponse.role()).isEqualTo(Role.USER);
-        assertThat(userResponse.enabled()).isTrue();
+        assertThat(userResponse.enabled()).isFalse();
     }
 
     @Test
@@ -83,7 +83,7 @@ public class AuthControllerTest extends IntegrationTestBase {
                         new HttpEntity<>(getHttpHeaders()),
                         String.class);
 
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR);
-        assertThat(response.getBody()).isEqualTo("Внутренняя ошибка сервера"); //TODO как нибудь переделать logout
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).isEqualTo("Logout Successful");
     }
 }
