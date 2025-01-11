@@ -27,7 +27,7 @@ public class ExpiryNotificationScheduler {
 
     private final MedicineRepository medicineRepository;
     private final NotificationService notificationService;
-    private final TemplateEngine templateEngine;  // Инжектируем Thymeleaf TemplateEngine
+    private final TemplateEngine templateEngine;
 
     @Scheduled(cron = "0 0 7 * * ?")
     public void notifyMedicineExpiringSoon() {

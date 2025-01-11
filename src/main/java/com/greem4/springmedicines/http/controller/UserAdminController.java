@@ -5,6 +5,7 @@ import com.greem4.springmedicines.domain.UserAction;
 import com.greem4.springmedicines.dto.UserResponse;
 import com.greem4.springmedicines.dto.UserRoleUpdateRequest;
 import com.greem4.springmedicines.mapper.UserResponseMap;
+import com.greem4.springmedicines.scheduler.ExpiryNotificationScheduler;
 import com.greem4.springmedicines.service.UserRoleService;
 import com.greem4.springmedicines.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,7 @@ public class UserAdminController {
 
     private final UserRoleService userRoleService;
     private final UserService userService;
+    private final ExpiryNotificationScheduler expiryNotificationScheduler;
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
@@ -66,6 +68,12 @@ public class UserAdminController {
         var userResponse = UserResponseMap.toUserResponse(updated);
 
         return ResponseEntity.ok(userResponse);
+    }
+
+    @PostMapping("/notification")
+    public ResponseEntity<Void> triggerExpiryNotification() {
+        expiryNotificationScheduler.notifyMedicineExpiringSoon();
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}")
