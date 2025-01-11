@@ -1,7 +1,7 @@
 app:
   oauth2:
-    success-redirect-url: http://localhost:5173/oauth2/redirect
-    failure-redirect-url: http://localhost:5173/login-error
+    success-redirect-url: ${SUCCESS_REDIRECT}
+    failure-redirect-url: ${FAILURE_REDIRECT}
   mail:
     sender: ${MAIL_SET_FROM}
     to: ${MAIL_TO}

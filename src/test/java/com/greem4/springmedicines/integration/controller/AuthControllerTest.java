@@ -27,7 +27,7 @@ public class AuthControllerTest extends IntegrationTestBase {
         assertThat(userResponse).isNotNull();
         assertThat(userResponse.username()).isEqualTo("testUser");
         assertThat(userResponse.role()).isEqualTo(Role.USER);
-        assertThat(userResponse.enabled()).isTrue();
+        assertThat(userResponse.enabled()).isFalse();
     }
 
     @Test

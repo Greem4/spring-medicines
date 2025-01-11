@@ -27,12 +27,12 @@
         <appender-ref ref="FILE"/>
     </root>
 
-    <logger name="com.greem4" level="DEBUG" additivity="false">
+    <logger name="com.greem4" level="info" additivity="false">
         <appender-ref ref="CONSOLE"/>
         <appender-ref ref="FILE"/>
     </logger>
 
-    <logger name="org.springframework.security" level="DEBUG" additivity="false"/>
+    <logger name="org.springframework.security" level="info" additivity="false"/>
     <logger name="com.greem4.springmedicines.util.aspect" level="info" />
 
     <logger name="org.hibernate" level="WARN"/>

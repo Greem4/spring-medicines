@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -40,7 +41,7 @@ public class UserService {
         user.setUsername(request.username());
         user.setPassword(passwordEncoder.encode(request.password()));
         user.setRole(Role.USER);
-        user.setEnabled(true);
+        user.setEnabled(false);
         user.setProvider("local");
         user.setProviderId(null);
 
@@ -71,7 +72,7 @@ public class UserService {
     public void saveOAuthUser(String login, String provider, String providerId) {
         var user = new User();
         user.setUsername(login);
-        user.setPassword(passwordEncoder.encode("${//dd//pass}"));
+        user.setPassword(passwordEncoder.encode(UUID.randomUUID().toString()));
         user.setProvider(provider);
         user.setProviderId(providerId);
         user.setRole(Role.USER);
