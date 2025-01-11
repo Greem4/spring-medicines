@@ -20,7 +20,7 @@ import jakarta.validation.Valid;
 @RestController
 @RequestMapping("/api/v1/medicines")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin()
 @Tag(name = "Medicine API", description = "API для управления лекарствами")
 public class MedicineController {
 

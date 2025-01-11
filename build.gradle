@@ -83,10 +83,6 @@ test {
     finalizedBy jacocoTestReport
 }
 
-tasks.withType(Test).configureEach {
-    enabled = false
-}
-
 jacocoTestReport {
     dependsOn test
     reports {

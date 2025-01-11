@@ -4,10 +4,10 @@ import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDate;
 
-@Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@Getter
+@Setter
 @Entity
 @Table(name = "medicine")
 public class Medicine extends Auditable {
@@ -24,3 +24,4 @@ public class Medicine extends Auditable {
     @Column(name = "expiration_date")
     private LocalDate expirationDate;
 }
+

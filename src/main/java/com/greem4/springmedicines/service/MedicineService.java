@@ -37,27 +37,27 @@ public class MedicineService {
 
     @Transactional
     public MedicineView addMedicine(MedicineCreateRequest request) {
-        var medicine = Medicine.builder()
-                .name(request.name())
-                .serialNumber(request.serialNumber())
-                .expirationDate(request.expirationDate())
-                .build();
+        var medicine = new Medicine();
+
+        medicine.setName(request.name());
+        medicine.setSerialNumber(request.serialNumber());
+        medicine.setExpirationDate(request.expirationDate());
+
         var saved = medicineRepository.save(medicine);
         return toMedicineView(saved);
     }
 
     @Transactional
     public MedicineView updateMedicine(Long id, MedicineUpdateRequest request) {
-        medicineRepository.findById(id)
+        var existingMedicine = medicineRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Препарат не найден"));
 
-        var medicineUpdate = Medicine.builder()
-                .name(request.name())
-                .serialNumber(request.serialNumber())
-                .expirationDate(request.expirationDate())
-                .build();
+        existingMedicine.setName(request.name());
+        existingMedicine.setSerialNumber(request.serialNumber());
+        existingMedicine.setExpirationDate(request.expirationDate());
 
-        return toMedicineView(medicineUpdate);
+        var save = medicineRepository.save(existingMedicine);
+        return toMedicineView(save);
     }
 
     @Transactional
