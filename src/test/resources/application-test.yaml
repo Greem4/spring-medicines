@@ -1,3 +1,6 @@
+base:
+  url: test://test//test
+
 app:
   oauth2:
     success-redirect-url: test://test//test

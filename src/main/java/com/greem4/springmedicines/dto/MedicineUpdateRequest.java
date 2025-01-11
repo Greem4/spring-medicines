@@ -9,7 +9,7 @@ import java.time.LocalDate;
 public record MedicineUpdateRequest(
         @NotBlank() String name,
         @NotBlank() String serialNumber,
-        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
         @NotNull() LocalDate expirationDate
 ) {
 }
