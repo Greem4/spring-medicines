@@ -39,7 +39,7 @@ spring:
             client-id: ${YANDEX_CLIENT_ID}
             client-secret: ${YANDEX_CLIENT_SECRET}
             authorization-grant-type: authorization_code
-            redirect-uri: http://localhost:8080/login/oauth2/code/yandex
+            redirect-uri: ${YANDEX_REDIRECT_URI}
             scope:
               - "login:email"
               - "login:info"

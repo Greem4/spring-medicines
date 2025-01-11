@@ -58,6 +58,5 @@
 
 ## Тестирование
 
-- **Unit-тесты**: JUnit + Mockito
 - **Интеграционные тесты**: Spring Boot Test + Testcontainers (поднимают PostgreSQL контейнер)
 - Запуск: `./gradlew test`
