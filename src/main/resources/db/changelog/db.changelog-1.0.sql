@@ -18,7 +18,7 @@ CREATE TABLE "users"
     username           VARCHAR(50)  NOT NULL UNIQUE,
     password           VARCHAR(200) NOT NULL,
     enabled            BOOLEAN      NOT NULL DEFAULT TRUE,
-    role               varchar(50)    NOT NULL,
+    role               VARCHAR(50)    NOT NULL,
     provider           VARCHAR(50),
     provider_id        VARCHAR(100),
     created_date       TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
