@@ -1,9 +1,6 @@
 --liquibase formatted sql
 
 --changeset Greem4:1
-CREATE TYPE user_role AS ENUM ('ADMIN', 'USER');
-
---changeset Greem4:2
 CREATE TABLE medicine
 (
     id                 BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
@@ -14,21 +11,21 @@ CREATE TABLE medicine
     last_modified_date TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
---changeset Greem4:3
+--changeset Greem4:2
 CREATE TABLE "users"
 (
     id                 BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     username           VARCHAR(50)  NOT NULL UNIQUE,
     password           VARCHAR(200) NOT NULL,
     enabled            BOOLEAN      NOT NULL DEFAULT TRUE,
-    role               user_role    NOT NULL,
+    role               varchar(50)    NOT NULL,
     provider           VARCHAR(50),
     provider_id        VARCHAR(100),
     created_date       TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     last_modified_date TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
---changeset Greem4:4
+--changeset Greem4:3
 INSERT INTO "users" (username, password, enabled, role, provider, provider_id)
 VALUES ('admin', '$2a$10$jQW41fRoFpFRj3lABONpqOwnBXsOazglWGP.iF0gSsPch.SPhBSq2',
         TRUE, 'ADMIN', 'local', NULL),
