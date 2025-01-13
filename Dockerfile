@@ -1,6 +1,3 @@
-# ------------------------------------
-# Этап сборки (build stage)
-# ------------------------------------
 FROM gradle:8.5-jdk21 AS build
 LABEL authors="greem4"
 
@@ -17,10 +14,10 @@ COPY src ./src
 
 RUN gradle clean bootJar -x test
 
-# ------------------------------------
-# Этап выполнения (runtime stage)
-# ------------------------------------
-FROM openjdk:21-jdk
+
+
+FROM eclipse-temurin:21-jre-alpine
+LABEL authors="greem4"
 
 WORKDIR /app
 
