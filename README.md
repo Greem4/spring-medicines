@@ -4,7 +4,7 @@
 
 ## Стек технологий
 
-- **Язык**: Java 23+
+- **Язык**: Java 21+
 - **Фреймворк**: Spring Boot 3.4.0 (Security, Data JPA, Mail)
 - **База данных**: PostgreSQL
 - **Миграции**: Liquibase
