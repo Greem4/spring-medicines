@@ -1,4 +1,3 @@
-# Этап сборки приложения
 FROM gradle:8.5-jdk21 AS build
 WORKDIR /app
 COPY build.gradle settings.gradle gradlew ./
@@ -7,7 +6,6 @@ RUN ./gradlew dependencies
 COPY src ./src
 RUN ./gradlew clean bootJar -x test
 
-# Этап запуска приложения
 FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
 COPY --from=build /app/build/libs/*.jar /app/app.jar

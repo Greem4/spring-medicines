@@ -27,21 +27,21 @@
         <appender-ref ref="FILE"/>
     </root>
 
-    <logger name="com.greem4" level="debug" additivity="false">
+    <logger name="com.greem4" level="INFO" additivity="false">
         <appender-ref ref="CONSOLE"/>
         <appender-ref ref="FILE"/>
     </logger>
 
-    <logger name="org.springframework.security" level="debug" additivity="false"/>
-    <logger name="com.greem4.springmedicines.util.aspect" level="debug" />
-    <logger name="org.apache.coyote.http11" level="DEBUG" />
-    <logger name="org.apache.tomcat.util.net" level="DEBUG" />
+    <logger name="org.springframework.security" level="INFO" additivity="false"/>
+    <logger name="com.greem4.springmedicines.util.aspect" level="INFO" />
+    <logger name="org.apache.coyote.http11" level="INFO" />
+    <logger name="org.apache.tomcat.util.net" level="INFO" />
 
 
     <logger name="org.hibernate" level="WARN"/>
     <logger name="com.zaxxer.hikari" level="WARN"/>
 
-    <logger name="org.hibernate.SQL" level="info" additivity="false">
+    <logger name="org.hibernate.SQL" level="INFO" additivity="false">
         <appender-ref ref="CONSOLE"/>
         <appender-ref ref="FILE"/>
     </logger>
