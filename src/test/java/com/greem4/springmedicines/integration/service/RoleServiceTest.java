@@ -31,6 +31,18 @@ public class RoleServiceTest extends IntegrationTestBase {
     }
 
     @Test
+    void testUpdateUserRoleHH() {
+        var user = userRepository.findByUsername("user").orElseThrow();
+        assertThat(user.getRole()).isEqualTo(Role.USER);
+
+        var request = new UserRoleUpdateRequest("user", "HH");
+        userRoleService.updateUserRole(request);
+
+        var update = userRepository.findByUsername("user").orElseThrow();
+        assertThat(update.getRole()).isEqualTo(Role.HH);
+    }
+
+    @Test
     void testDisableUserRole() {
         var user = userRepository.findByUsername("user").orElseThrow();
         assertThat(user.isEnabled()).isTrue();
