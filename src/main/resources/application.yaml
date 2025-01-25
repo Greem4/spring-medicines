@@ -63,19 +63,22 @@ spring:
     check-template-location: false
 
   mail:
-    host: ${SPRING_MAIL_HOST}
-    port: ${SPRING_MAIL_PORT}
-    username: ${SPRING_MAIL_USERNAME}
-    password: ${SPRING_MAIL_PASSWORD}
+    host: smtp.yandex.ru
+    port: 587
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    protocol: smtp
     properties:
       mail:
         smtp:
-          auth: ${SPRING_MAIL_AUTH}
-          starttls:
-            enable: ${SPRING_MAIL_STARTTLS_ENABLE}
-          connection-timeout: 5000
+          auth: true
+          starttls.enable: true
+          from: ${MAIL_SET_FROM}
+          tls:
+            enable: true
+          connection timeout: 5000
           timeout: 5000
-          write-timeout: 5000
+          write timeout: 5000
 
 springdoc:
   api-docs:
