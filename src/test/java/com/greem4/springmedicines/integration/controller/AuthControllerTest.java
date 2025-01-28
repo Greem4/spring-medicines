@@ -58,9 +58,29 @@ public class AuthControllerTest extends IntegrationTestBase {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         JwtResponse jwtResponse = response.getBody();
         assertThat(jwtResponse).isNotNull();
-        assertThat(jwtResponse.type()).isNotEmpty().isEqualTo("Bearer");
-        assertThat(jwtResponse.username()).isEqualTo("user");
-        assertThat(jwtResponse.role()).isEqualTo(Role.USER);
+        var claims = parseJwtToken(jwtResponse.token());
+        assertThat(claims.getSubject()).isEqualTo("user");
+
+        assertThat(extractRoles(claims)).contains("ROLE_USER");
+
+    }
+
+    @Test
+    public void authDemoTest() {
+        var loginRequest = new LoginRequest("demo", "demo");
+
+        var response = testRestTemplate
+                .postForEntity("/api/v1/auth/login",
+                        new HttpEntity<>(loginRequest, getHttpHeaders()),
+                        JwtResponse.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        JwtResponse jwtResponse = response.getBody();
+        assertThat(jwtResponse).isNotNull();
+        var claims = parseJwtToken(jwtResponse.token());
+        assertThat(claims.getSubject()).isEqualTo("demo");
+
+        assertThat(extractRoles(claims)).contains("ROLE_HH");
     }
 
     @Test

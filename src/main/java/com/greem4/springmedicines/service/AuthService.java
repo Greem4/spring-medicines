@@ -22,16 +22,8 @@ public class AuthService {
         );
 
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        String jwt = jwtUtils.generateJwtToken(userDetails.getUsername(), userDetails.getAuthorities());
-
         return new JwtResponse(
-                jwt,
-                "Bearer",
-                3600,
-                "read write",
-                userDetails.getId(),
-                userDetails.getUsername(),
-                userDetails.getRole()
+                jwtUtils.generateJwtToken(userDetails.getUsername(), userDetails.getAuthorities())
         );
     }
 }

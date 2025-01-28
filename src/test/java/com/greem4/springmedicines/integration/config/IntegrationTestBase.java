@@ -1,9 +1,14 @@
 package com.greem4.springmedicines.integration.config;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.greem4.springmedicines.dto.JwtResponse;
 import com.greem4.springmedicines.dto.LoginRequest;
+import com.greem4.springmedicines.util.security.JwtUtils;
 import com.icegreen.greenmail.util.GreenMail;
 import com.icegreen.greenmail.util.ServerSetup;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,6 +29,8 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
+import javax.crypto.SecretKey;
+import java.util.List;
 import java.util.Objects;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -38,6 +45,12 @@ public abstract class IntegrationTestBase {
 
     @Autowired
     protected TestRestTemplate testRestTemplate;
+
+    @Autowired
+    protected ObjectMapper objectMapper;
+
+    @Autowired
+    protected JwtUtils jwtUtils;
 
     @Container
     protected static final PostgreSQLContainer<?> POSTGRESQL_CONTAINER = new PostgreSQLContainer<>("postgres:17-alpine");
@@ -100,5 +113,18 @@ public abstract class IntegrationTestBase {
         var headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         return headers;
+    }
+
+    protected Claims parseJwtToken(String token) {
+        return Jwts.parser()
+                .verifyWith((SecretKey) jwtUtils.getKey())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
+
+    }
+
+    protected List<String> extractRoles(Claims claims) {
+        return objectMapper.convertValue(claims.get("role"), new TypeReference<>() {});
     }
 }

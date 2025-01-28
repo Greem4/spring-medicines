@@ -32,14 +32,14 @@ public class RoleServiceTest extends IntegrationTestBase {
 
     @Test
     void testUpdateUserRoleHH() {
-        var user = userRepository.findByUsername("user").orElseThrow();
-        assertThat(user.getRole()).isEqualTo(Role.USER);
+        var user = userRepository.findByUsername("demo").orElseThrow();
+        assertThat(user.getRole()).isEqualTo(Role.HH);
 
-        var request = new UserRoleUpdateRequest("user", "HH");
+        var request = new UserRoleUpdateRequest("demo", "USER");
         userRoleService.updateUserRole(request);
 
         var update = userRepository.findByUsername("user").orElseThrow();
-        assertThat(update.getRole()).isEqualTo(Role.HH);
+        assertThat(update.getRole()).isEqualTo(Role.USER);
     }
 
     @Test

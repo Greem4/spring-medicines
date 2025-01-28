@@ -18,7 +18,7 @@ CREATE TABLE "users"
     username           VARCHAR(50)  NOT NULL UNIQUE,
     password           VARCHAR(200) NOT NULL,
     enabled            BOOLEAN      NOT NULL DEFAULT TRUE,
-    role               VARCHAR(50)    NOT NULL,
+    role               VARCHAR(50)  NOT NULL,
     provider           VARCHAR(50),
     provider_id        VARCHAR(100),
     created_date       TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -30,4 +30,7 @@ INSERT INTO "users" (username, password, enabled, role, provider, provider_id)
 VALUES ('admin', '$2a$10$jQW41fRoFpFRj3lABONpqOwnBXsOazglWGP.iF0gSsPch.SPhBSq2',
         TRUE, 'ADMIN', 'local', NULL),
        ('user', '$2a$10$oOCO7kSJxg0rKU7.zjuEUuPV0usbRogkad3hzVY23J8t8oRecs77u',
-        TRUE, 'USER', 'local', NULL)
+        TRUE, 'USER', 'local', NULL),
+       ('demo', '$2a$10$5pLMk2XkoauhM2EFnvUBxuweekTvw1OKr8TnKxmC5HWF5jo6miPce',
+        TRUE, 'HH', 'local', NULL);
+

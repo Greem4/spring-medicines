@@ -24,7 +24,6 @@ class JwtUtilsTest extends IntegrationTestBase {
         var body = authenticate("admin", "admin");
 
         assertThat(body).isNotNull();
-        assertThat(body.type()).isEqualTo("Bearer");
         assertThat(body.token().split("\\.")).hasSize(3);
     }
 
@@ -32,7 +31,8 @@ class JwtUtilsTest extends IntegrationTestBase {
     void getUserNameFromJwtToken() {
         var body = authenticate("admin", "admin");
 
-        assertThat(body.username()).isEqualTo("admin");
+        var claims = parseJwtToken(body.token());
+        assertThat(claims.getSubject()).isEqualTo("admin");
     }
 
     @Test
