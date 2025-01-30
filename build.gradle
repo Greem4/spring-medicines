@@ -83,6 +83,13 @@ test {
     finalizedBy jacocoTestReport
 }
 
+bootJar {
+    layered {
+        enabled = true
+        includeLayerTools = false
+    }
+}
+
 jacocoTestReport {
     dependsOn test
     reports {

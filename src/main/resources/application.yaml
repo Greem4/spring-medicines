@@ -13,7 +13,16 @@ jwt:
   secret: ${JWT_SECRET}
   expirationMs: ${JWT_EXPIRATION_MS}
 
+server:
+  compression:
+    enabled: true
+
 spring:
+  main:
+    lazy-initialization: true
+  jmx:
+    enabled: false
+
   datasource:
     url: ${DB_URL}
     username: ${DB_USERNAME}
