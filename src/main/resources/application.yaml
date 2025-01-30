@@ -52,9 +52,11 @@ spring:
             user-info-uri: https://login.yandex.ru/info
             user-name-attribute: default_email
 
-  output:
-    ansi:
-      enabled: always
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
 
   thymeleaf:
     enabled: true
@@ -79,6 +81,10 @@ spring:
           connection timeout: 5000
           timeout: 5000
           write timeout: 5000
+
+  output:
+    ansi:
+      enabled: always
 
 springdoc:
   api-docs:
