@@ -1,17 +1,15 @@
 FROM gradle:8.5-jdk21-alpine AS build
 WORKDIR /app
 
-COPY gradle.* gradlew ./
+COPY settings.gradle build.gradle gradle.* gradlew ./
 COPY gradle ./gradle
 RUN ./gradlew --no-daemon --quiet dependencies
-
 COPY src ./src
-COPY build.gradle settings.gradle ./
 RUN ./gradlew --no-daemon --quiet clean bootJar -x test
 
-FROM eclipse-temurin:21-jre-alpine as jre
+FROM eclipse-temurin:21-jdk-alpine AS jre
 RUN $JAVA_HOME/bin/jlink \
-    --add-modules java.base,java.logging,java.management,java.nio,java.sql \
+    --add-modules ALL-MODULE-PATH \
     --strip-debug \
     --no-man-pages \
     --no-header-files \
