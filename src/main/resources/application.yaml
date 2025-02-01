@@ -8,6 +8,10 @@ app:
   mail:
     sender: ${MAIL_SET_FROM}
     to: ${MAIL_TO}
+  rabbitmq:
+      queue: notificationsQueue
+      exchange: notificationsExchange
+      routingKey: notifications.#Email
 
 jwt:
   secret: ${JWT_SECRET}
@@ -55,8 +59,10 @@ spring:
   rabbitmq:
     host: localhost
     port: 5672
-    username: ${RABBIT_USER}
-    password: ${RABBIT_PASS}
+    username: guest
+    password: guest
+  #    username: ${RABBIT_USER}
+#    password: ${RABBIT_PASS}
 
   thymeleaf:
     enabled: true

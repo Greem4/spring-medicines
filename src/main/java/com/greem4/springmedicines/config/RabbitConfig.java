@@ -9,31 +9,41 @@ import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.amqp.support.converter.MessageConverter;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @EnableRabbit
 public class RabbitConfig {
-    public static final String QUEUE_NAME = "notificationsQueue";
-    public static final String EXCHANGE_NAME = "notificationsExchange";
-    public static final String ROUTING_KEY = "notifications.key";
+
+    @Value("${app.rabbitmq.exchange}")
+    private String exchangeName;
+
+    @Value("${app.rabbitmq.queue}")
+    private String queueName;
+
+    @Value("${app.rabbitmq.routingKey}")
+    private String routingKey;
 
     @Bean
     public Queue notificationsQueue() {
-        return new Queue(QUEUE_NAME, true);
+        return new Queue(queueName, true);
     }
 
     @Bean
     public TopicExchange notificationsExchange() {
-        return new TopicExchange(EXCHANGE_NAME);
+        return new TopicExchange(exchangeName);
     }
 
     @Bean
-    public Binding binding(Queue notificationsQueue, TopicExchange notificationsExchange) {
-        return BindingBuilder.bind(notificationsQueue)
+    public Binding binding(Queue notificationsQueue,
+                           TopicExchange notificationsExchange
+    ) {
+        return BindingBuilder
+                .bind(notificationsQueue)
                 .to(notificationsExchange)
-                .with(ROUTING_KEY);
+                .with(routingKey);
     }
 
     @Bean

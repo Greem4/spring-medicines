@@ -14,13 +14,14 @@ import java.io.UnsupportedEncodingException;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class EmailNotifier {
+public class EmailNotifier implements Notifier {
 
     @Value("${app.mail.sender}")
     private String mailFrom;
 
     private final JavaMailSender mailSender;
 
+    @Override
     public void sendNotification(NotificationMessage message) {
         try {
             var mimeMessage = mailSender.createMimeMessage();
