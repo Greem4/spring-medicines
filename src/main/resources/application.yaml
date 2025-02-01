@@ -9,24 +9,15 @@ app:
     sender: ${MAIL_SET_FROM}
     to: ${MAIL_TO}
   rabbitmq:
-      queue: notificationsQueue
-      exchange: notificationsExchange
-      routingKey: notifications.#Email
+    queue: notificationsQueue
+    exchange: notificationsExchange
+    routingKey: notifications.#Email
 
 jwt:
   secret: ${JWT_SECRET}
   expirationMs: ${JWT_EXPIRATION_MS}
 
-server:
-  compression:
-    enabled: true
-
 spring:
-  main:
-    lazy-initialization: true
-  jmx:
-    enabled: false
-
   datasource:
     url: ${DB_URL}
     username: ${DB_USERNAME}
@@ -71,7 +62,7 @@ spring:
     username: guest
     password: guest
   #    username: ${RABBIT_USER}
-#    password: ${RABBIT_PASS}
+  #    password: ${RABBIT_PASS}
 
   thymeleaf:
     enabled: true
