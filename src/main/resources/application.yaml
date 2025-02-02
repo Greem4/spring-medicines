@@ -56,19 +56,19 @@ spring:
             user-info-uri: https://login.yandex.ru/info
             user-name-attribute: default_email
 
-  rabbitmq:
-    host: localhost
-    port: 5672
-    username: guest
-    password: guest
-  #    username: ${RABBIT_USER}
-  #    password: ${RABBIT_PASS}
-
   thymeleaf:
     enabled: true
     prefix: classpath:/templates/
     suffix: .html
     check-template-location: false
+
+  rabbitmq:
+    host: localhost
+    port: 5672
+#    username: guest
+#    password: guest
+    username: ${RABBIT_USER}
+    password: ${RABBIT_PASS}
 
   mail:
     host: smtp.yandex.ru

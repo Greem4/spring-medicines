@@ -13,7 +13,7 @@
   - OAuth2 (через Яндекс) с выдачей собственного JWT
 - **Авторизация**: ролевой доступ (**USER**, **ADMIN**)
 - **Токены**: **JWT**
-- **Отправка email**: `JavaMailSender` + SMTP
+- **Отправка email**: `JavaMailSender + RabbitMQ` + SMTP
 - **Сборка**: Gradle
 - **Тестирование**: JUnit, Testcontainers
 - **Документация API**: Springdoc OpenAPI
@@ -35,7 +35,7 @@
 4. **Email-уведомления**
   - При приближении даты истечения срока годности отправляется письмо на email.
   - SMTP-настройки (логин, пароль, хост, порт) задаются в `application.yaml` или через `.env`.
-  - Используется `JavaMailSender`.
+  - Используется `JavaMailSender -> RabbitMQ -> Mail`.
 
 5. **Liquibase**
   - Для миграций БД: автоматически создаёт таблицы и вставляет тестовые данные.
