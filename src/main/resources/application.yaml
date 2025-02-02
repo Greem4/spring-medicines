@@ -71,8 +71,8 @@ spring:
     password: ${RABBIT_PASS}
 
   mail:
-    host: smtp.yandex.ru
-    port: 587
+    host: smtp.beget.com
+    port: 465
     username: ${MAIL_USERNAME}
     password: ${MAIL_PASSWORD}
     protocol: smtp
@@ -82,11 +82,11 @@ spring:
           auth: true
           starttls.enable: true
           from: ${MAIL_SET_FROM}
-          tls:
-            enable: true
+          ssl.enable: true
           connection timeout: 5000
           timeout: 5000
           write timeout: 5000
+      default-encoding: UTF-8
 
   output:
     ansi:
