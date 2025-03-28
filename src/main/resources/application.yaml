@@ -92,6 +92,9 @@ spring:
     ansi:
       enabled: always
 
+  config:
+    import: optional:file:.env[.properties]
+
 springdoc:
   api-docs:
     path: /api-docs
